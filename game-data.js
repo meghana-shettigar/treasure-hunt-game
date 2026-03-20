@@ -13,18 +13,19 @@ const gameData = {
     locations: [
         {
             id: 1,
-            clue: "I hang up high where journeys begin, I have two hands but never wave.\nTrains rush past, but I stay still, helping travellers know when to leave.\n\nWhat am I?",
+            clue: "I hang up high where journeys begin, I have two hands but never wave.\nTrains rush past, but I stay still, helping travellers know when to leave.\n\nWhat am I?\n\n Ans: The Waterloo ___",
             name: "Location 1: Waterloo Clock",
-            locationName: "Waterloo Clock",
+            locationName: "Clock",
             locationNameVariations: ["waterloo clock", "clock", "the waterloo clock"],
             mapHint: "https://www.google.com/maps/embed?pb=!4v1769363363916!6m8!1m7!1sRMzv-N5FVCOLpPAxGn0opg!2m2!1d51.50322710450521!2d-0.1123464712873058!3f298.3047576250058!4f3.665911227972913!5f0.7820865974627469",
-            question: "Stand where travellers first step inside the station, which is visible from your location,\nA mural to celebrate 200 years of rail travel greets you right at the beginning of the journey. \nA child is shown travelling through time,\n\nFrom which place did the child begin their journey?",            correctAnswer: "Horsley",
+            question: "Stand where travellers first step inside the station, which is visible if you stand below the Waterloo Clock,\nA mural to celebrate 200 years of rail travel greets you right at the beginning of the journey. \nA child is shown travelling through time,\n\nFrom which place did the child begin their journey?",            
+            correctAnswer: "Horsley",
             textHint: "A place name derived from- place of horses",
             titbits: "Waterloo Station is one of London's busiest railway stations, opened in 1848. The station's clock has been a landmark for travellers for over 170 years. The station was named after the Battle of Waterloo and has been featured in numerous films and literature. The mural celebrating 200 years of rail travel depicts scenes from railway history, including a child travelling through time."
         },
         {
             id: 2,
-            clue: "Travel to the level where time meets your eyes.\nStand face-to-face with the clock — not above it, not below it.\nFrom here, look carefully around,\nYou will see a couple made of pericrete, frozen in time on a wall.\n\nHow many people are peeking over the wall?",
+            clue: "Travel to the upper level where clock meets your eyes.\nFrom here, look carefully around that level,\nYou will see a couple made of pericrete, frozen in time on a wall.\n\nHere how many people are peeking over the wall?",
             name: "Location 2: Six People",
             locationName: "Six",
             locationNameVariations: ["six", "6"],
@@ -36,7 +37,7 @@ const gameData = {
         },
         {
             id: 3,
-            clue: "Return to the level of your first location.\nFace the medal, point compass north, walk towards 240 degrees.\nThere, a family of three travellers pauses —\nstanding on what they carried, after crossing sea and time.\nThis monument remembers their long journey and arrival.\n\nWhat is the name of this monument?",
+            clue: "Return to the level of clock and walk towards 240 degrees.\nThere, a family of three travellers pauses —\nstanding on what they carried, after crossing sea and time.\nThis monument remembers their long journey and arrival.\n\nWhat is the name of this monument?",
             name: "Location 3: National Windrush Monument",
             locationName: "National Windrush Monument",
             locationNameVariations: ["national windrush monument", "windrush monument", "the national windrush monument"],
@@ -53,7 +54,7 @@ const gameData = {
             locationName: "Station Main Entrance",
             locationNameVariations: ["station main entrance", "main entrance", "the station main entrance"],
             mapHint: "https://www.google.com/maps/embed?pb=!4v1769366295551!6m8!1m7!1sxe67uJO7W6owtu7z-UGvUA!2m2!1d51.50386113822189!2d-0.1138200265378699!3f177.50941301104305!4f26.691932314604855!5f0.7820865974627469",
-            question: "At the great entrance of journeys and time, a word hides between two ancient lands.\n\nWhat place sits between France and Egypt?",
+            question: "After finding the nearest exit from there, to the station Main Entrance,\n Stepping outside, facing the entrance, a word hides between two ancient lands.\n\nWhat place sits between France and Egypt?",
             correctAnswer: "Mesopotamia",
             textHint: "My name means \"land between two rivers\", spoken long ago in Greek.",
             titbits: "Waterloo Station's main entrance is a grand Victorian structure that has welcomed millions of travellers. The station was designed by architects and opened in 1848. The entrance area contains various historical references and architectural details. Mesopotamia, meaning 'land between two rivers' in Greek, refers to the ancient region between the Tigris and Euphrates rivers, located between modern-day France (via historical connections) and Egypt."
@@ -85,7 +86,7 @@ const gameData = {
         },
         {
             id: 7,
-            clue: "Time remembers those who never returned. Before travelling onward, honour the names of those who fell in action or died of wounds and disease.\nFind the memorial, collect letters exactly as follows:\n\n• First and second letter of the 6th name in the second column\n• First and second letter of the 6th name in the first column\n• Sixth, seventh and eighth letter of the 5th name in the second column\n• Add a space, then add an x\n\nWhere does this spell take you?",
+            clue: "Time remembers those who never returned. Before travelling onward, honour the names of those who fell in action or died of wounds and disease, on the memorial next to where you stand.\n Collect letters exactly as follows for the Australian contingent:\n\n• First and second letter of the 6th name in the second column\n• First and second letter of the 6th name in the first column\n• Sixth, seventh and eighth letter of the 5th name in the second column\n• Add a space, then add an x\n\nWhere does this spell take you?",
             name: "Location 7: Charing Cross",
             locationName: "Charing Cross",
             locationNameVariations: ["charing cross", "charing cross station"],

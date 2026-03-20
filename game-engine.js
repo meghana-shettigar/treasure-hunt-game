@@ -380,11 +380,18 @@ class GameEngine {
         }
     }
 
-    // Restore game state from saved data
+    // Restore game state from saved data (with guardrail: never skip ahead in sequence)
     restoreState(stateData) {
         if (!stateData) return false;
 
-        this.currentLocationIndex = stateData.currentLocationIndex || 0;
+        let index = stateData.currentLocationIndex || 0;
+        const completedCount = (stateData.completedLocations || []).length;
+        const maxIndex = typeof gameData !== 'undefined' && gameData.locations
+            ? gameData.locations.length
+            : 10;
+        // Ensure we never show a location we haven't reached in sequence (prevents skipped locations)
+        this.currentLocationIndex = Math.min(index, completedCount + 1, maxIndex);
+        this.currentLocationIndex = Math.max(0, this.currentLocationIndex);
         this.score = stateData.score || 0;
         this.startTime = stateData.startTime || null;
         this.elapsedTime = stateData.elapsedTime || 0;

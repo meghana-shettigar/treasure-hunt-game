@@ -766,8 +766,16 @@ function generateAnswerDashes(answer) {
     return words.map(word => word.split('').map(char => char === "'" ? "'" : '_').join(' ')).join(' - '); // '/ ' between words
 }
 
-// Load current location data
+// Load current location data (with guardrail: only show location we've reached in sequence)
 function loadCurrentLocation() {
+    // Guardrail: ensure we never skip ahead (current index must not exceed completed locations + 1)
+    const completedCount = (gameEngine.completedLocations || []).length;
+    const maxLocations = gameData && gameData.locations ? gameData.locations.length : 10;
+    const maxAllowedIndex = Math.min(completedCount + 1, maxLocations);
+    if (gameEngine.currentLocationIndex > maxAllowedIndex) {
+        gameEngine.currentLocationIndex = Math.max(0, maxAllowedIndex);
+    }
+
     const location = gameEngine.getCurrentLocation();
     if (!location) return;
     
@@ -1266,11 +1274,35 @@ function closeTitbits() {
     showScreen('game-screen');
 }
 
+// Get recipient name for final letter: booking name if available, else player name from game start
+async function getFinalLetterRecipient() {
+    if (gameEngine.bookingId && window.DatabaseService) {
+        try {
+            const dbRef = window.DatabaseService.db || (typeof firebase !== 'undefined' && firebase.firestore ? firebase.firestore() : null);
+            if (dbRef) {
+                const bookingDoc = await dbRef.collection('bookings').doc(gameEngine.bookingId).get();
+                const docExists = typeof bookingDoc.exists === 'function' ? bookingDoc.exists() : bookingDoc.exists;
+                if (docExists) {
+                    const bookingData = bookingDoc.data();
+                    if (bookingData && bookingData.messageTo && String(bookingData.messageTo).trim()) {
+                        return String(bookingData.messageTo).trim();
+                    }
+                    if (bookingData && bookingData.name && String(bookingData.name).trim()) {
+                        return String(bookingData.name).trim();
+                    }
+                }
+            }
+        } catch (e) {
+            console.warn('Could not fetch booking for recipient name:', e.message);
+        }
+    }
+    return gameEngine.individualPlayerName || gameEngine.playerName || (gameEngine.groupMembers && gameEngine.groupMembers[0]) || 'Adventurer';
+}
+
 // Fetch personal message from database/API
 async function fetchPersonalMessage() {
     try {
-        // Get player name for the default opening
-        const recipient = gameEngine.groupMembers.length > 0 ? gameEngine.groupMembers[0] : gameEngine.playerName;
+        const recipient = await getFinalLetterRecipient();
         const defaultOpening = `Dear ${recipient},\n\nIn the year 1800, this message was written but never delivered. Through time and space, it has found its way to you.`;
         
         // Try to get personal message from booking/game session
@@ -1316,17 +1348,23 @@ async function fetchPersonalMessage() {
         
         // Fallback to default message if no personalized message
         // Note: messageFrom is already stored in gameEngine.messageFrom for signature use
-        return getDefaultMessage();
+        return await getDefaultMessageAsync();
     } catch (error) {
         console.error('Error fetching personal message:', error);
-        // Fallback to default message
-        return getDefaultMessage();
+        // Fallback to default message (with correct recipient from booking/player)
+        return await getDefaultMessageAsync();
     }
 }
 
-// Get default message if none is available
+// Get default message if none is available (uses same recipient as fetchPersonalMessage)
+async function getDefaultMessageAsync() {
+    const recipient = await getFinalLetterRecipient();
+    return `Dear ${recipient},\n\nIn the year 1800, this message was written but never delivered. Through time and space, it has found its way to you.\n\nYou have followed the trail, solved the puzzles, and proven yourself worthy. This letter was meant for you, across the centuries.\n\nMay this journey remind you that some messages are timeless, and some connections transcend the boundaries of time itself.`;
+}
+
 function getDefaultMessage() {
-    const recipient = gameEngine.groupMembers.length > 0 ? gameEngine.groupMembers[0] : gameEngine.playerName;
+    // Synchronous fallback only when async not possible (recipient may be wrong until fetch completes)
+    const recipient = gameEngine.individualPlayerName || gameEngine.playerName || (gameEngine.groupMembers && gameEngine.groupMembers[0]) || 'Adventurer';
     return `Dear ${recipient},\n\nIn the year 1800, this message was written but never delivered. Through time and space, it has found its way to you.\n\nYou have followed the trail, solved the puzzles, and proven yourself worthy. This letter was meant for you, across the centuries.\n\nMay this journey remind you that some messages are timeless, and some connections transcend the boundaries of time itself.`;
 }
 
