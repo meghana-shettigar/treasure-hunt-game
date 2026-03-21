@@ -278,7 +278,7 @@
     <div class="booking-container">
         <div class="booking-header">
             <div class="time-machine-icon" style="text-align: center; margin-bottom: 20px;">
-                <a href="landing.html" style="text-decoration: none; display: inline-block;">
+                <a href="index.html" style="text-decoration: none; display: inline-block;">
                     <img src="images/letter-left-behind-logo.png" alt="Letter Left Behind Logo" style="max-width: 300px; height: auto;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                 </a>
                 <span style="display:none;">⏰</span>
@@ -286,7 +286,7 @@
             <h1 class="game-title">Book Your Adventure</h1>
             <p class="game-subtitle">Letter Left Behind - Treasure Hunt</p>
             <p style="margin-top: 10px;">
-                <a href="landing.html" style="color: rgba(255, 255, 255, 0.8); text-decoration: none; font-size: 0.9rem;">← Back to Home</a>
+                <a href="index.html" style="color: rgba(255, 255, 255, 0.8); text-decoration: none; font-size: 0.9rem;">← Back to Home</a>
             </p>
         </div>
 
@@ -474,7 +474,7 @@
            <!-- <p>You'll receive payment instructions shortly.</p> -->
             <div id="game-link" style="margin-top: 20px;"></div>
             <!--<p style="margin-top: 30px;">
-                <a href="index.html" class="btn-primary btn-sparkle" style="text-decoration: none; display: inline-block;">
+                <a href="game.html" class="btn-primary btn-sparkle" style="text-decoration: none; display: inline-block;">
                     Return to Game
                 </a>
             </p> -->
@@ -1134,7 +1134,7 @@
                         const sessionId = await window.DatabaseService.createGameSessionFromBooking(bookingId, formData);
                         if (sessionId) {
                             console.log('Game session created:', sessionId);
-                            const gameLink = `${window.location.origin}${window.location.pathname.replace('booking.html', 'index.html')}?bookingId=${bookingId}`;
+                            const gameLink = `${window.location.origin}${window.location.pathname.replace('booking.html', 'game.html')}?bookingId=${bookingId}`;
                             // Store game link in booking document for easy access
                             await dbRef.collection('bookings').doc(bookingId).update({
                                 gameSessionId: sessionId,
@@ -1167,7 +1167,7 @@
                 // Display game link if available
                 const gameLinkElement = document.getElementById('game-link');
                 if (gameLinkElement) {
-                    const gameLink = `${window.location.origin}${window.location.pathname.replace('booking.html', 'index.html')}?bookingId=${bookingId}`;
+                    const gameLink = `${window.location.origin}${window.location.pathname.replace('booking.html', 'game.html')}?bookingId=${bookingId}`;
                     gameLinkElement.innerHTML = `
                         <p style="margin-top: 15px; padding: 15px; background: rgba(102, 126, 234, 0.1); border-radius: 8px; border-left: 4px solid #667eea;">
                             <strong>🎮 Your Game Link:</strong><br>

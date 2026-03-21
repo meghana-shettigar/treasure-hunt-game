@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#1a1a2e">
+    <title>Letter Left Behind - Treasure Hunt</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- EmailJS SDK for support chat -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+</head>
+<body>
+    <!-- Background Music - COMMENTED OUT FOR NOW -->
+    <!-- 
+    FREE AUDIO SOURCE: Use music from Pixabay Music (https://pixabay.com/music/)
+    - License: Free for commercial use, NO attribution required
+    - Search for "adventure", "mystery", or "treasure hunt"
+    - Download and add URL below
+    -->
+    <!--
+    <audio id="background-music" loop preload="auto">
+        <source src="YOUR_PIXABAY_MUSIC_URL" type="audio/mpeg">
+        For now, audio is disabled - add your music file to enable
+    </audio>
+    -->
+
+    <!-- Tutorial Screen -->
+    <div id="tutorial-screen" class="screen active">
+        <div class="tutorial-container">
+            <div class="tutorial-header">
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <img src="images/letter-left-behind-logo.png" alt="Letter Left Behind Logo" style="max-width: 250px; height: auto;" onerror="this.style.display='none';">
+                </div>
+                <h1 class="game-title">How to Play</h1>
+                <p class="game-subtitle">Letter Left Behind - Treasure Hunt</p>
+            </div>
+            
+            <div class="tutorial-content">
+                <div class="tutorial-section">
+                    <div class="tutorial-icon">🎯</div>
+                    <h3>Game Overview</h3>
+                    <p>Embark on a time-traveling treasure hunt through various locations. Follow clues, solve puzzles, and discover the letter left behind.</p>
+                </div>
+
+                <div class="tutorial-section">
+                    <div class="tutorial-icon">📍</div>
+                    <h3>How to Play</h3>
+                    <ol class="tutorial-list">
+                        <li><strong>Read the Clue:</strong> Each location starts with a clue that helps you identify where to go next.</li>
+                        <li><strong>Find the Location:</strong> Type the location name in the text input field.</li>
+                        <li><strong>Confirm Location:</strong> Once correct, you'll see a confirmation.</li>
+                        <li><strong>Answer the Question:</strong> Answer based on physical things at the location.</li>
+                        <li><strong>Get Next Clue:</strong> After answering correctly, receive the next clue.</li>
+                        <li><strong>Complete All the Locations:</strong> Continue until you find the hidden message from 1800!</li>
+                    </ol>
+                </div>
+
+                <div class="tutorial-section">
+                    <div class="tutorial-icon">🎮</div>
+                    <h3>Tips for Success</h3>
+                    <ul class="tutorial-list">
+                        <li>You get <strong>100 points as bonus</strong> for playing the game!</li>
+                        <li>Solve clues carefully for location hints</li>
+                        <li>Look around - some answers are based on the physical features</li>
+                        <li>Earn <strong>+100 points</strong> per correct answer</li>
+                        <li>Text hints cost <strong>-30 points</strong>, map hints cost <strong>-50 points</strong></li>
+                        <li>You can use dashes for the answers to help you solve the clues</li>
+                        <li>Dash means number of letters in the word</li>
+                        <li>Slash means space between words</li>
+                        <li>Track progress with "Your Journey" panel</li>
+                        <li>Take your time and enjoy the history!</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="tutorial-actions">
+                <button id="start-after-tutorial-btn" class="btn-primary">Got It! Let's Begin</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Welcome Screen -->
+    <div id="welcome-screen" class="screen">
+        <div class="welcome-container">
+            <div class="time-machine-icon">
+                <img src="images/letter-left-behind-logo.png" alt="Letter Left Behind Logo" style="max-width: 300px; height: auto;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                <span style="display:none;">⏰</span>
+            </div>
+            <h1 class="game-title">Letter Left Behind</h1>
+            <p class="game-subtitle">A Treasure Hunt Through Time</p>
+            <div class="story-intro">
+                <p>In the year 1800, a mysterious letter was written but never delivered...</p>
+                <p>Now, centuries later, clues have surfaced across the city. Follow the trail, solve the puzzles, and discover what was meant to be found.</p>
+            </div>
+            <div class="player-setup">
+                <label for="group-size">Playing as:</label>
+                <select id="group-size">
+                    <option value="solo">Solo Explorer</option>
+                    <option value="group">Group Adventure</option>
+                </select>
+                <div id="solo-name-container">
+                    <label id="name-label" for="player-name">Your Name:</label>
+                    <input type="text" id="player-name" placeholder="Enter your name" maxlength="50">
+                </div>
+                <div id="group-name-container" style="display: none;">
+                    <label for="team-name">Team Name:</label>
+                    <input type="text" id="team-name" placeholder="Enter your team name" maxlength="50">
+                    <label for="player-name-group" style="margin-top: 15px;">Your Name:</label>
+                    <input type="text" id="player-name-group" placeholder="Enter your name" maxlength="50">
+                </div>
+            </div>
+            <button id="start-game-btn" class="btn-primary btn-sparkle">Begin the Journey</button>
+            <button id="resume-previous-game-btn" class="btn-secondary" style="margin-top: 10px;">🔄 Resume Previous Game</button>
+            <button id="view-tutorial-btn" class="btn-secondary" style="margin-top: 10px;">Go back to the Tutorial</button>
+        </div>
+    </div>
+
+    <!-- Starting Point Screen -->
+    <div id="starting-point-screen" class="screen">
+        <div class="location-container">
+            <div class="location-header">
+                <div class="location-number">📍</div>
+                <h2>Starting Point</h2>
+            </div>
+            <div class="location-content">
+                <p class="instruction-text">Welcome, time traveler! Your journey begins here.</p>
+                <p class="instruction-text">Please make your way to the starting location shown below. Once you arrive, tap the button to begin your quest.</p>
+                <div class="starting-location-info">
+                    <h3>📍 Starting Location</h3>
+                    <p id="starting-location-name">[Starting Location Name]</p>
+                    <p class="location-address" id="starting-location-address">[Starting Location Address]</p>
+                </div>
+               <!-- <div class="location-image-placeholder">
+                </div> -->
+                <button id="arrived-btn" class="btn-primary btn-sparkle">I've Arrived - Start the Hunt!</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="game-screen" class="screen">
+        <div class="game-header">
+            <div class="game-header-left">
+                <div class="score-container">
+                    <span class="score-icon">⭐</span>
+                    <span id="score">0</span>
+                </div>
+            </div>
+            <div class="game-header-right">
+                <div class="timer-container">
+                    <span class="timer-icon">⏱️</span>
+                    <span id="timer">00:00</span>
+                </div>
+                <button id="help-support-btn" class="btn-help" title="Get Help">
+                    <span class="help-icon">?</span>
+                </button>
+                <!-- Music toggle button - COMMENTED OUT FOR NOW -->
+                <!--
+                <button id="music-toggle-btn" class="btn-music" title="Toggle Music">
+                    <span id="music-icon">🎵</span>
+                </button>
+                -->
+            </div>
+        </div>
+
+        <div class="game-content">
+            <!-- Location Stage Indicator -->
+            <div id="location-stage-indicator" class="location-stage-indicator">
+                <span id="stage-text"></span>
+            </div>
+            
+            <!-- Clue Display -->
+            <div id="clue-section" class="game-section">
+                <div class="section-header">
+                    <h3>🔍 Your Clue</h3>
+                </div>
+                <div class="clue-content">
+                    <div id="clue-image-container" style="display: none; margin-bottom: 16px; text-align: center;">
+                        <img id="clue-image" src="" alt="Clue map" style="max-width: 100%; max-height: 300px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    </div>
+                    <p id="clue-text">Loading clue...</p>
+                    <div id="clue-dashes" class="answer-dashes" style="margin-top: 10px; font-family: monospace; font-size: 1.2em; color: var(--accent-color);"></div>
+                </div>
+                <div id="location-name-input-container" style="margin-top: 20px;">
+                    <label for="location-name-input" style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-dark);">Enter the location name:</label>
+                    <input type="text" id="location-name-input" placeholder="Type the location name here...">
+                    <button id="submit-location-name-btn" class="btn-primary btn-sparkle" style="margin-top: 10px;">Submit Location</button>
+                </div>
+                <div class="hint-buttons">
+                    <button id="map-hint-btn" class="btn-hint">🗺️ Map Hint (-50 pts)</button>
+                </div>
+            </div>
+
+            <!-- Location Confirmation (shown after correct location name) -->
+            <div id="location-info-section" class="game-section" style="display: none;">
+                <div class="section-header">
+                    <h3>📍 Go to Location</h3>
+                </div>
+                <div class="location-info-content">
+                    <p id="location-name" class="location-name">Location Name</p>
+                </div>
+            </div>
+
+            <!-- Question Section (shown when at location) -->
+            <div id="question-section" class="game-section" style="display: none;">
+                <div class="section-header">
+                    <h3>❓ Location Question</h3>
+                </div>
+                <div class="question-content">
+                    <p id="question-text">Loading question...</p>
+                    <div id="question-dashes" class="answer-dashes" style="margin-top: 10px; font-family: monospace; font-size: 1.2em; color: var(--accent-color);"></div>
+                    <div id="answer-input-container" style="margin-top: 20px;">
+                        <label for="answer-input" style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-dark);">Your answer:</label>
+                        <input type="text" id="answer-input" placeholder="Type your answer here...">
+                        <button id="submit-answer-btn" class="btn-primary btn-sparkle" style="margin-top: 10px;">Submit Answer</button>
+                    </div>
+                    <div class="hint-buttons" style="margin-top: 20px;">
+                        <button id="text-hint-btn" class="btn-hint">💡 Text Hint (-30 pts)</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons" id="action-buttons-container" style="display: none;">
+                <button id="view-titbits-btn" class="btn-secondary">📚 Learn About This Place</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Titbits Screen -->
+    <div id="titbits-screen" class="screen">
+        <div class="titbits-container">
+            <div class="titbits-header">
+                <h2>📚 Did You Know?</h2>
+                <button id="close-titbits-btn" class="btn-close">✕</button>
+            </div>
+            <div class="titbits-content">
+                <div id="titbits-text">
+                    <p>Loading interesting facts...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pinned Locations Panel -->
+    <div id="locations-panel" class="locations-panel collapsed">
+        <div class="locations-panel-header">
+            <h3>📋 Your Journey</h3>
+            <button id="toggle-locations-panel-btn" class="btn-toggle-panel">+</button>
+        </div>
+        <div class="locations-panel-content">
+            <div id="locations-list">
+                <p style="color: #666; text-align: center; padding: 20px;">Complete locations to see your journey...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Character Introduction Modal -->
+    <div id="character-intro-modal" class="modal character-modal">
+        <div class="modal-content character-modal-content">
+            <div class="character-portrait">
+                <img id="character-image" src="images/master-archibald.png" alt="Master Archibald" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 200 200\'%3E%3Ccircle cx=\'100\' cy=\'100\' r=\'100\' fill=\'%23d4a574\'/%3E%3Ctext x=\'100\' y=\'120\' font-size=\'60\' text-anchor=\'middle\' fill=\'%23333\'%3E👨%3C/text%3E%3C/svg%3E';">
+            </div>
+            <div class="character-dialogue">
+                <h3 id="character-name">Master Archibald</h3>
+                <p id="character-intro-text">Greetings, time traveler! I am Master Archibald, the keeper of this temporal treasure hunt. I shall guide you through this journey across the centuries...</p>
+            </div>
+            <button id="close-character-intro-btn" class="btn-primary btn-sparkle">Begin the Adventure</button>
+        </div>
+    </div>
+
+    <!-- Character Popup Modal (for hints and messages) -->
+    <div id="character-popup-modal" class="modal character-modal">
+        <div class="modal-content character-popup-content">
+            <button id="close-character-popup-x-btn" class="close-popup-btn" title="Close">×</button>
+            <div class="character-portrait-small">
+                <img id="character-popup-image" src="images/master-archibald.png" alt="Master Archibald" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 200 200\'%3E%3Ccircle cx=\'100\' cy=\'100\' r=\'100\' fill=\'%23d4a574\'/%3E%3Ctext x=\'100\' y=\'120\' font-size=\'60\' text-anchor=\'middle\' fill=\'%23333\'%3E👨%3C/text%3E%3C/svg%3E';">
+            </div>
+            <div class="character-dialogue-popup">
+                <h4 id="character-popup-name">Master Archibald</h4>
+                <p id="character-popup-text">Loading message...</p>
+                <div id="character-hint-content" style="display: none;">
+                    <div class="hint-divider"></div>
+                    <p id="character-hint-text" style="margin-top: 15px; font-weight: 600; color: var(--accent-color);"></p>
+                    <div id="character-map-hint-container" style="display: none; margin-top: 15px;">
+                        <iframe id="character-map-iframe" width="100%" height="300" style="border:0; border-radius: 8px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                </div>
+            </div>
+            <button id="close-character-popup-btn" class="btn-primary">Continue</button>
+        </div>
+    </div>
+
+    <!-- Hint Modal -->
+    <div id="hint-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="hint-modal-title">Hint</h3>
+                <button class="btn-close" id="close-hint-modal">✕</button>
+            </div>
+            <div class="modal-body">
+                <p id="hint-text">Loading hint...</p>
+                <div id="map-hint-container" style="display: none;">
+                    <div class="map-placeholder">
+                        <!-- Unsplash: Free to use under Unsplash License (https://unsplash.com/license) -->
+                        <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?w=400&h=300&fit=crop" alt="Map" onerror="this.style.display='none';">
+                        <p>Map showing next location</p>
+                        <p id="map-hint-text" style="display: none;"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Feedback Dialog Modal -->
+    <div id="feedback-modal" class="modal">
+        <div class="modal-content feedback-modal-content">
+            <div class="modal-header">
+                <h3>✨ Share Your Feedback</h3>
+                <button class="btn-close" id="close-feedback-modal">✕</button>
+            </div>
+            <div class="modal-body feedback-body">
+                <!-- Feedback Form -->
+                <form id="feedback-form">
+                    <p class="feedback-intro">We'd love to hear about your adventure! Your feedback helps us improve the game.</p>
+                    
+                    <!-- Overall Rating -->
+                    <div class="form-group">
+                        <label for="rating">How would you rate your overall experience? <span class="required">*</span></label>
+                        <div class="rating-buttons">
+                            <button type="button" class="rating-btn" data-rating="5" title="Excellent">5 ⭐</button>
+                            <button type="button" class="rating-btn" data-rating="4" title="Very Good">4 ⭐</button>
+                            <button type="button" class="rating-btn" data-rating="3" title="Good">3 ⭐</button>
+                            <button type="button" class="rating-btn" data-rating="2" title="Fair">2 ⭐</button>
+                            <button type="button" class="rating-btn" data-rating="1" title="Poor">1 ⭐</button>
+                        </div>
+                        <input type="hidden" id="rating" name="rating" required>
+                    </div>
+
+                    <!-- What Enjoyed Most -->
+                    <div class="form-group">
+                        <label>What did you enjoy most? (Select all that apply) <span class="required">*</span></label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="enjoyed" value="storyline">
+                                <span>The storyline and theme</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="enjoyed" value="finding-clues">
+                                <span>Finding clues at physical locations</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="enjoyed" value="solving-puzzles">
+                                <span>Solving puzzles and questions</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="enjoyed" value="titbits">
+                                <span>Learning about historical locations</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="enjoyed" value="final-letter">
+                                <span>The final letter reveal</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="enjoyed" value="scoring">
+                                <span>The scoring system</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="enjoyed" value="hints">
+                                <span>The hint system</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Difficulty Level -->
+                    <div class="form-group">
+                        <label for="difficulty">How would you rate the difficulty level? <span class="required">*</span></label>
+                        <select id="difficulty" name="difficulty" required>
+                            <option value="">Select...</option>
+                            <option value="too-easy">Too Easy</option>
+                            <option value="just-right">Just Right</option>
+                            <option value="too-difficult">Too Difficult</option>
+                        </select>
+                    </div>
+
+                    <!-- Would Recommend -->
+                    <div class="form-group">
+                        <label for="recommend">Would you recommend this game to others? <span class="required">*</span></label>
+                        <select id="recommend" name="recommend" required>
+                            <option value="">Select...</option>
+                            <option value="definitely-yes">Definitely Yes</option>
+                            <option value="probably-yes">Probably Yes</option>
+                            <option value="maybe">Maybe</option>
+                            <option value="probably-no">Probably No</option>
+                            <option value="definitely-no">Definitely No</option>
+                        </select>
+                    </div>
+
+                    <!-- What Could Be Improved -->
+                    <div class="form-group">
+                        <label for="improvements">What could we improve to make the game better?</label>
+                        <textarea id="improvements" name="improvements" rows="3" placeholder="Share your thoughts..."></textarea>
+                    </div>
+
+                    <!-- Additional Comments -->
+                    <div class="form-group">
+                        <label for="comments">Any other comments or suggestions?</label>
+                        <textarea id="comments" name="comments" rows="3" placeholder="We'd love to hear more..."></textarea>
+                    </div>
+
+                    <!-- Contact (Optional) -->
+                    <div class="form-group">
+                        <label for="email">Email (optional - only if you'd like us to follow up)</label>
+                        <input type="email" id="email" name="email" placeholder="your.email@example.com">
+                    </div>
+
+                    <!-- Error Messages Container -->
+                    <div id="feedback-errors" class="feedback-errors" style="display: none;"></div>
+                    
+                    <!-- Form Actions -->
+                    <div class="feedback-form-actions">
+                        <button type="submit" class="btn-primary btn-sparkle" id="submit-feedback-btn">
+                            💬 Submit Feedback
+                        </button>
+                        <button type="button" id="close-feedback-form-btn" class="btn-secondary btn-cancel">Cancel</button>
+                    </div>
+                </form>
+
+                <!-- Success Message (hidden by default) -->
+                <div id="feedback-success" class="feedback-success" style="display: none;">
+                    <div class="feedback-icon">🎉</div>
+                    <h3>Thank You!</h3>
+                    <p>Your feedback has been submitted successfully. We really appreciate you taking the time to share your thoughts!</p>
+                    <button type="button" id="close-feedback-after-submit" class="btn-primary">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Final Reveal Screen -->
+    <div id="final-screen" class="screen">
+        <div class="final-container">
+            <div class="final-header">
+                <div class="time-machine-icon-large">
+                    <img src="images/letter-left-behind-logo.png" alt="Letter Left Behind Logo" style="max-width: 200px; height: auto;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <span style="display:none;">⏰</span>
+                </div>
+                <h1>Your Message from 1800!</h1>
+                <p class="final-subtitle">You've completed the journey through time</p>
+            </div>
+
+            <div class="final-stats">
+                <div class="stat-card">
+                    <div class="stat-icon">⏱️</div>
+                    <div class="stat-label">Time Taken</div>
+                    <div class="stat-value" id="final-time">00:00</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⭐</div>
+                    <div class="stat-label">Final Score</div>
+                    <div class="stat-value" id="final-score">0</div>
+                </div>
+            </div>
+
+            <div class="letter-reveal">
+                <div class="letter-container">
+                    <div class="letter-header">
+                        <p class="letter-date">Dated: 1800</p>
+                        <p class="letter-found">Found: <span id="current-year"></span></p>
+                    </div>
+                    <div class="letter-content">
+                        <p id="personal-message-text">Loading your personal message...</p>
+                    </div>
+                    <div class="letter-signature">
+                        <p>— A message from the past</p>
+                    </div>
+                </div>
+            </div>
+            
+
+            <div class="final-actions">
+                <button id="give-feedback-btn" class="btn-primary btn-sparkle">Give Feedback</button>
+                <button id="share-results-btn" class="btn-secondary">Share Results</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    
+    <!-- Firebase Configuration (must be loaded before database.js) -->
+    <script src="firebase-config.js"></script>
+    
+    <!-- Database Service -->
+    <script src="database.js"></script>
+    
+    <!-- Game Files -->
+    <script src="game-data.js"></script>
+    <script src="game-engine.js"></script>
+    <script src="app.js"></script>
+
+    <!-- Resume Previous Game Modal -->
+    <div id="resume-game-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>🔄 Resume Previous Game</h3>
+                <button class="btn-close" id="close-resume-modal">✕</button>
+            </div>
+            <div class="modal-body">
+                <p style="margin-bottom: 20px; color: #666;">Enter your name to search for saved games from today (within the last 2 hours).</p>
+                
+                <div class="form-group">
+                    <label for="resume-player-name">Your Name/ Your Team Name:</label>
+                    <input type="text" id="resume-player-name" placeholder="Enter your name or team name..." style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem; margin-top: 5px;">
+                </div>
+                
+                <button id="search-saved-games-btn" class="btn-primary" style="width: 100%; margin-top: 15px;">🔍 Search for Saved Games</button>
+                
+                <div id="saved-games-results" style="margin-top: 20px; display: none;">
+                    <h4 style="margin-bottom: 15px; color: var(--primary-color);">Found Saved Games:</h4>
+                    <div id="saved-games-list"></div>
+                    <p id="no-games-found" style="display: none; color: #666; text-align: center; padding: 20px;">No saved games found for this name from today (within 2 hours).</p>
+                </div>
+                
+                <div id="resume-loading" style="display: none; text-align: center; padding: 20px; color: #667eea;">
+                    Loading game...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Support Popup Modal -->
+    <div id="support-popup-modal" class="modal support-modal">
+        <div class="modal-content support-modal-content">
+            <div class="modal-header">
+                <h3>Need Help?</h3>
+                <button id="close-support-popup-btn" class="btn-close" title="Close">✕</button>
+            </div>
+            <div class="modal-body support-modal-body">
+                <p style="margin-bottom: 20px; color: var(--text-dark);">Choose how you'd like to contact support:</p>
+                <div class="support-buttons-container">
+                    <a href="mailto:meghana.shettigar@gmail.com?subject=Issue with Letter Left Behind" class="support-email-link" title="Email Support">
+                        📧 Email Support
+                    </a>
+                    <a href="tel:+447435672248" class="support-phone-link" title="Call Support">
+                        📞 Call Support
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
