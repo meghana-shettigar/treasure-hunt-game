@@ -37,7 +37,7 @@ const gameData = {
         },
         {
             id: 3,
-            clue: "Return to the level of clock and walk towards 240 degrees.\nThere, a family of three travellers pauses —\nstanding on what they carried, after crossing sea and time.\nThis monument remembers their long journey and arrival.\n\nWhat is the name of this monument?",
+            clue: "Return to the level of clock and walk 240 degrees.\nThere, a family of three travellers pauses —\nstanding on what they carried, after crossing sea and time.\nThis monument remembers their long journey and arrival.\n\nWhat is the name of this monument?",
             name: "Location 3: National Windrush Monument",
             locationName: "National Windrush Monument",
             locationNameVariations: ["national windrush monument", "windrush monument", "the national windrush monument"],
@@ -54,7 +54,7 @@ const gameData = {
             locationName: "Station Main Entrance",
             locationNameVariations: ["station main entrance", "main entrance", "the station main entrance"],
             mapHint: "https://www.google.com/maps/embed?pb=!4v1769366295551!6m8!1m7!1sxe67uJO7W6owtu7z-UGvUA!2m2!1d51.50386113822189!2d-0.1138200265378699!3f177.50941301104305!4f26.691932314604855!5f0.7820865974627469",
-            question: "After finding the nearest exit from there, to the station Main Entrance,\n Stepping outside, facing the entrance, a word hides between two ancient lands.\n\nWhat place sits between France and Egypt?",
+            question: "After finding the nearest exit from where you are stand, go to the station Main Entrance.\n Stepping outside, facing the entrance, a word hides between two ancient lands.\n\nWhat place sits between France and Egypt?",
             correctAnswer: "Mesopotamia",
             textHint: "My name means \"land between two rivers\", spoken long ago in Greek.",
             titbits: "Waterloo Station's main entrance is a grand Victorian structure that has welcomed millions of travellers. The station was designed by architects and opened in 1848. The entrance area contains various historical references and architectural details. Mesopotamia, meaning 'land between two rivers' in Greek, refers to the ancient region between the Tigris and Euphrates rivers, located between modern-day France (via historical connections) and Egypt."
@@ -86,7 +86,7 @@ const gameData = {
         },
         {
             id: 7,
-            clue: "Time remembers those who never returned. Before travelling onward, honour the names of those who fell in action or died of wounds and disease, on the memorial next to where you stand.\n Collect letters exactly as follows for the Australian contingent:\n\n• First and second letter of the 6th name in the second column\n• First and second letter of the 6th name in the first column\n• Sixth, seventh and eighth letter of the 5th name in the second column\n• Add a space, then add an x\n\nWhere does this spell take you?",
+            clue: "Time remembers those who never returned. Before travelling onward, on the memorial next to where you stand, honour the names of those who fell in action or died of wounds and disease.\n Collect letters exactly as follows for the Australian contingent:\n\n• First and second letter of the 6th name in the second column\n• First and second letter of the 6th name in the first column\n• Sixth, seventh and eighth letter of the 5th name in the second column\n• Add a space, then add an x\n\nWhere does this spell take you?",
             name: "Location 7: Charing Cross",
             locationName: "Charing Cross",
             locationNameVariations: ["charing cross", "charing cross station"],
@@ -110,7 +110,7 @@ const gameData = {
         },
         {
             id: 9,
-            clue: "High on a horse, frozen in time, I watch the square from every side. Kings may fall, but statues stay —\n\nWho am I?",
+            clue: "High on a horse, frozen in time, I watch the square from EVERY side. Kings may fall, but statues stay —\n\nWho am I?",
             name: "Location 9: King Charles I",
             locationName: "King Charles I",
             locationNameVariations: ["king charles i", "king charles", "charles i", "statue of king charles i"],
