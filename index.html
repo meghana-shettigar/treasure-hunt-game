@@ -15,10 +15,23 @@
     <link rel="stylesheet" href="styles.css">
     <style>
         .landing-container { max-width: 1200px; margin: 0 auto; padding: 24px 20px; }
-        .landing-banner { background: var(--accent-color); padding: 14px 20px; }
-        .landing-nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+        .landing-banner { background: var(--accent-color); padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+        .landing-banner-logo { display: flex; align-items: center; }
+        .landing-banner-logo img { height: 40px; width: auto; }
+        .landing-nav { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 12px; }
         .landing-nav a { color: white; text-decoration: none; font-size: 0.95rem; padding: 8px 16px; border-radius: 8px; transition: all 0.25s; font-weight: 500; }
         .landing-nav a:hover { color: var(--primary-color); background: #ffd700; }
+        .hamburger-btn { display: none; background: none; border: none; cursor: pointer; padding: 8px; flex-direction: column; justify-content: center; gap: 5px; }
+        .hamburger-btn span { display: block; width: 24px; height: 3px; background: white; border-radius: 2px; }
+        .landing-nav-dropdown { display: none; position: absolute; top: 100%; right: 0; background: var(--accent-color); padding: 12px; border-radius: 8px; box-shadow: 0 8px 20px rgba(0,0,0,0.2); min-width: 180px; z-index: 100; margin-top: 8px; }
+        .landing-nav-dropdown a { display: block; padding: 10px 16px; border-radius: 6px; }
+        .landing-nav-dropdown a:hover { background: #ffd700; color: var(--primary-color); }
+        .landing-nav-wrapper { position: relative; }
+        @media (max-width: 768px) {
+            .landing-nav { display: none; }
+            .hamburger-btn { display: flex; }
+            .landing-nav-dropdown.open { display: block; }
+        }
         .hero-section { text-align: center; padding: 28px 20px 36px; margin-bottom: 36px; }
         .hero-logo { max-width: 220px; height: auto; margin-bottom: 12px; }
         .hero-title { font-family: 'Cinzel', serif; font-size: 2.6rem; font-weight: 700; background: linear-gradient(135deg, #ffd700, #ffed4e); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 10px; line-height: 1.2; }
@@ -46,7 +59,9 @@
         .cta-title { font-family: 'Cinzel', serif; font-size: 2rem; color: white; margin-bottom: 12px; }
         .cta-text { font-size: 1.1rem; color: rgba(255,255,255,0.9); margin-bottom: 24px; max-width: 560px; margin-left: auto; margin-right: auto; }
         .btn-booking { background: var(--accent-color); color: white; padding: 16px 40px; border: none; border-radius: 50px; font-size: 1.15rem; font-weight: 700; cursor: pointer; transition: all 0.3s; box-shadow: 0 6px 20px rgba(233,69,96,0.4); text-decoration: none; display: inline-block; font-family: 'Inter', sans-serif; }
-        .btn-booking:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(233,69,96,0.6); background: #ffd700; color: var(--primary-color);}
+        .btn-booking:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(233,69,96,0.6); background: #ffd700; color: var(--primary-color); }
+        .btn-booking:focus, .btn-booking:active { background: var(--accent-color); color: white; outline: none; }
+        .btn-booking:focus:hover, .btn-booking:active:hover { background: #ffd700; color: var(--primary-color); }
         .support-links { text-align: center; padding: 24px 20px; margin-top: 24px; }
         .support-links a { color: rgba(255,255,255,0.8); text-decoration: none; margin: 0 12px; transition: color 0.3s; font-size: 0.95rem; }
         .support-links a:hover { color: var(--accent-color); }
@@ -60,15 +75,54 @@
 </head>
 <body>
     <div class="landing-banner">
-        <nav class="landing-nav" aria-label="Main navigation">
-            <a href="#about">About</a>
-            <a href="#how-it-works">How It Works</a>
-            <a href="#why-choose">Why Choose Us</a>
-            <a href="#faq">FAQ</a>
-            <a href="#testimonials">Testimonials</a>
-            <a href="booking.html">Book Now</a>
-        </nav>
+        <a href="index.html" class="landing-banner-logo">
+            <img src="images/letter-left-behind-logo.png" alt="Letter Left Behind" onerror="this.style.display='none'">
+        </a>
+        <div class="landing-nav-wrapper">
+            <button class="hamburger-btn" id="hamburger-btn" aria-label="Open menu" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+            <nav class="landing-nav" aria-label="Main navigation">
+                <a href="#about">About</a>
+                <a href="#how-it-works">How It Works</a>
+                <a href="#why-choose">Why Choose Us</a>
+                <a href="#faq">FAQ</a>
+                <a href="#testimonials">Testimonials</a>
+                <a href="booking.html">Book Now</a>
+            </nav>
+            <div class="landing-nav-dropdown" id="nav-dropdown">
+                <a href="#about">About</a>
+                <a href="#how-it-works">How It Works</a>
+                <a href="#why-choose">Why Choose Us</a>
+                <a href="#faq">FAQ</a>
+                <a href="#testimonials">Testimonials</a>
+                <a href="booking.html">Book Now</a>
+            </div>
+        </div>
     </div>
+    <script>
+        (function() {
+            var btn = document.getElementById('hamburger-btn');
+            var dropdown = document.getElementById('nav-dropdown');
+            function closeDropdown() {
+                if (dropdown) dropdown.classList.remove('open');
+                if (btn) btn.setAttribute('aria-expanded', 'false');
+            }
+            if (btn && dropdown) {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    dropdown.classList.toggle('open');
+                    btn.setAttribute('aria-expanded', dropdown.classList.contains('open'));
+                });
+                dropdown.querySelectorAll('a').forEach(function(link) {
+                    link.addEventListener('click', closeDropdown);
+                });
+                document.addEventListener('click', function(e) {
+                    if (!btn.contains(e.target) && !dropdown.contains(e.target)) closeDropdown();
+                });
+            }
+        })();
+    </script>
     <div class="landing-container">
         <div class="hero-section">
             <img src="images/letter-left-behind-logo.png" alt="Letter Left Behind - London Treasure Hunt" class="hero-logo" onerror="this.style.display='none';">
@@ -98,6 +152,13 @@
             </div>
         </section>
 
+        <section class="about-section" id="about">
+            <h2 class="section-title">About Letter Left Behind</h2>
+            <p class="about-text">
+                Letter Left Behind is a unique outdoor treasure hunt experience in London that blends time-travel storytelling with real-world exploration. Walk through Waterloo, Trafalgar Square, Charing Cross, and other iconic spots while solving riddles and uncovering a personalised letter from the past. A memorable gift and activity for locals and visitors alike.
+            </p>
+        </section>
+
         <section class="feature-section" id="how-it-works">
             <h2 class="section-title">How It Works</h2>
             <div style="max-width: 760px; margin: 0 auto;">
@@ -110,12 +171,7 @@
             </div>
         </section>
 
-        <section class="about-section" id="about">
-            <h2 class="section-title">About Letter Left Behind</h2>
-            <p class="about-text">
-                Letter Left Behind is a unique outdoor treasure hunt experience in London that blends time-travel storytelling with real-world exploration. Walk through Waterloo, Trafalgar Square, Charing Cross, and other iconic spots while solving riddles and uncovering a personalised letter from the past. A memorable gift and activity for locals and visitors alike.
-            </p>
-        </section>
+
 
         <section class="faq-section" id="faq">
             <h2 class="section-title">Frequently Asked Questions</h2>
