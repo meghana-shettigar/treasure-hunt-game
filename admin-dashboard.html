@@ -277,14 +277,14 @@
             </div>
             <div id="bookings-stats" class="stats"></div>
             
-            <!-- Upcoming Bookings -->
-            <h3 style="margin-top: 30px; margin-bottom: 15px; color: var(--primary-color);">Upcoming Bookings</h3>
+            <!-- Upcoming Bookings (by scheduled date/time, not workflow status) -->
+            <h3 style="margin-top: 30px; margin-bottom: 15px; color: var(--primary-color);" title="Bookings whose scheduled date and time are still in the future. Status (Pending, Confirmed, etc.) does not move rows between lists.">Upcoming Bookings</h3>
             <div id="upcoming-bookings-container">
                 <div class="loading">Loading upcoming bookings...</div>
             </div>
             
-            <!-- Completed Bookings -->
-            <h3 style="margin-top: 30px; margin-bottom: 15px; color: var(--primary-color);">Completed Bookings</h3>
+            <!-- Completed Bookings = past scheduled slots (not the same as Status = Completed) -->
+            <h3 style="margin-top: 30px; margin-bottom: 15px; color: var(--primary-color);" title="Bookings whose scheduled date and time are in the past. This is separate from the Status column (e.g. payment/game link).">Completed Bookings</h3>
             <div id="completed-bookings-container">
                 <div class="loading">Loading completed bookings...</div>
             </div>
@@ -843,7 +843,8 @@
                     ...doc.data()
                 }));
 
-                // Separate upcoming and completed
+                // Separate by scheduled date/time only (not workflow status).
+                // Upcoming = future slot; Completed Bookings section = past slot.
                 const now = new Date();
                 const upcoming = [];
                 const completed = [];
@@ -853,9 +854,14 @@
                         completed.push(booking);
                         return;
                     }
-                    
+
                     const bookingDateTime = new Date(`${booking.date}T${booking.time}`);
-                    if (bookingDateTime >= now && booking.status !== 'completed' && booking.status !== 'cancelled') {
+                    if (Number.isNaN(bookingDateTime.getTime())) {
+                        completed.push(booking);
+                        return;
+                    }
+
+                    if (bookingDateTime >= now) {
                         upcoming.push(booking);
                     } else {
                         completed.push(booking);
@@ -896,7 +902,7 @@
                     <div class="value">${upcomingCount}</div>
                 </div>
                 <div class="stat-card">
-                    <h3>Completed</h3>
+                    <h3>Past (by date)</h3>
                     <div class="value">${completedCount}</div>
                 </div>
                 <div class="stat-card">
@@ -1055,7 +1061,10 @@
         // Format payment method
         function formatPaymentMethod(method) {
             const map = {
+                'stripe': 'Stripe',
                 'card': '💳 Card',
+                'google_pay': 'Google Pay',
+                'apple_pay': 'Apple Pay',
                 'paypal': 'PayPal',
                 'bank': '🏦 Bank'
             };

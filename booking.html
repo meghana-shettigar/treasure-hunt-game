@@ -157,6 +157,217 @@
             font-weight: 500;
         }
 
+        .refund-policy-intro {
+            font-size: 0.95rem;
+            color: #555;
+            margin-bottom: 16px;
+            margin-top: 16px;
+            line-height: 1.55;
+        }
+
+        .refund-policy-list {
+            margin: 0;
+            padding-left: 1.25rem;
+            color: #444;
+            line-height: 1.6;
+            font-size: 0.92rem;
+        }
+
+        .refund-policy-list > li {
+            margin-bottom: 18px;
+        }
+
+        .refund-policy-list > li > strong {
+            display: block;
+            margin-bottom: 6px;
+            color: #1a1a2e;
+            font-size: 0.98rem;
+        }
+
+        .refund-policy-list ul {
+            margin: 8px 0 0 0;
+            padding-left: 1.15rem;
+        }
+
+        .refund-policy-list li p {
+            margin: 6px 0 0 0;
+        }
+
+        .refund-policy-link {
+            display: inline-block;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        .refund-policy-link a {
+            color: var(--accent-color);
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(26, 26, 46, 0.65);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .modal-dialog {
+            background: var(--card-bg);
+            border-radius: 16px;
+            max-width: 520px;
+            width: 100%;
+            max-height: 90vh;
+            overflow: auto;
+            padding: 24px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+            position: relative;
+        }
+
+        .modal-dialog.wide {
+            max-width: 640px;
+        }
+
+        .modal-dialog h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+            font-family: 'Cinzel', serif;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            line-height: 1;
+            color: #666;
+        }
+
+        .modal-close:hover {
+            color: var(--accent-color);
+        }
+
+        #booking-payment-modal-overlay .modal-dialog {
+            max-width: 520px;
+        }
+
+        #booking-payment-modal-overlay #payment-modal-title {
+            margin: 0 36px 20px 0;
+            padding-bottom: 4px;
+        }
+
+        /* Stripe split card fields (injected by stripe-booking-payment.js) */
+        #booking-payment-modal-overlay .stripe-split-card-wrap {
+            margin-top: 4px;
+        }
+
+        #booking-payment-modal-overlay .stripe-split-row-number {
+            margin-bottom: 16px;
+        }
+
+        #booking-payment-modal-overlay .stripe-split-row-exp-cvc {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            align-items: flex-start;
+        }
+
+        #booking-payment-modal-overlay .stripe-split-col {
+            min-width: 0;
+        }
+
+        #booking-payment-modal-overlay .StripeElement {
+            padding: 12px 14px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background: #fff;
+        }
+
+        #payment-modal-error {
+            color: #c0392b;
+            font-size: 0.9rem;
+            margin-top: 12px;
+            min-height: 1.2em;
+        }
+
+        #payment-modal-summary {
+            background: #f4f6fb;
+            border: 1px solid #dfe3ec;
+            border-radius: 10px;
+            padding: 14px 16px;
+            margin-bottom: 18px;
+            font-size: 0.92rem;
+            line-height: 1.45;
+            color: #1a1a2e;
+        }
+
+        #payment-modal-summary .payment-modal-summary-title {
+            margin: 0 0 10px 0;
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #5c6370;
+        }
+
+        #payment-modal-summary .payment-modal-summary-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 4px 0;
+            border-bottom: 1px solid #e8ebf2;
+        }
+
+        #payment-modal-summary .payment-modal-summary-row:last-of-type {
+            border-bottom: none;
+        }
+
+        #payment-modal-summary .payment-modal-summary-label {
+            color: #5c6370;
+            flex-shrink: 0;
+        }
+
+        #payment-modal-summary .payment-modal-summary-value {
+            text-align: right;
+            font-weight: 600;
+        }
+
+        #payment-modal-summary .payment-modal-summary-total {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 2px solid #c5cbd8;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            font-size: 1.05rem;
+        }
+
+        #payment-modal-summary .payment-modal-summary-total span:first-child {
+            font-weight: 700;
+            color: #1a1a2e;
+        }
+
+        #payment-modal-summary .payment-modal-summary-total .payment-total-amount {
+            font-weight: 700;
+            font-size: 1.15rem;
+            color: var(--primary-color, #667eea);
+        }
+
+        #payment-modal-summary .payment-modal-summary-note {
+            margin: 10px 0 0 0;
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+
         .submit-section {
             margin-top: 30px;
             text-align: center;
@@ -367,6 +578,7 @@
                 </div>
             </div>
 
+ 
             <!-- Personal Message -->
             <div class="form-section">
                 <h3>💌 Personal Message (Optional)</h3>
@@ -386,35 +598,10 @@
                 <div class="form-group">
                     <label for="personal-message">Surprise message to be revealed at the end of the game</label>
                     <textarea id="personal-message" name="personal-message" placeholder="* This could be a message for your loved ones, team, a special note, or anything you'd like to say...&#10;* Do not include 'Dear ---' as it will be automatically added."></textarea>
-                    <small>Optional: This message will appear in the final letter when the game is completed.</small>
+                    <small>This message will appear in the final letter when the game is completed.</small>
                     <div class="error-message" id="personal-message-error"></div>
                 </div>
             </div>
-
-            <!-- Payment -->
-            <!-- <div class="form-section">
-                <h3>💳 Payment</h3>
-                
-                <div class="form-group">
-                    <label>Payment Method <span class="required">*</span></label>
-                    <div class="payment-options">
-                        <div class="payment-option" onclick="selectPayment('card')">
-                            <input type="radio" id="payment-card" name="payment" value="card">
-                            <label for="payment-card">💳 Card</label>
-                        </div>
-                        <div class="payment-option" onclick="selectPayment('paypal')">
-                            <input type="radio" id="payment-paypal" name="payment" value="paypal">
-                            <label for="payment-paypal">PayPal</label>
-                        </div>
-                        <div class="payment-option" onclick="selectPayment('bank')">
-                            <input type="radio" id="payment-bank" name="payment" value="bank">
-                            <label for="payment-bank">🏦 Bank Transfer</label>
-                        </div>
-                    </div>
-                    <small>Payment link will be sent via email after booking confirmation</small>
-                    <div class="error-message" id="payment-error"></div>
-                </div>
-            </div>-->
 
             <!-- Additional Information -->
             <div class="form-section">
@@ -448,16 +635,43 @@
                 </div>
             </div>
 
+            <!-- Payment -->
+           <div class="form-section">
+            <h3>💳 Payment</h3>
+            <div class="form-group">
+                <label>Payment method <span class="required">*</span></label>
+                <div class="payment-options">
+                    <div class="payment-option" onclick="selectPayment('card')">
+                        <input type="radio" id="payment-card" name="payment" value="card" required>
+                        <label for="payment-card">Card</label>
+                    </div>
+                    <div class="payment-option" onclick="selectPayment('google_pay')">
+                        <input type="radio" id="payment-google_pay" name="payment" value="google_pay">
+                        <label for="payment-google_pay">Google Pay</label>
+                    </div>
+                    <div class="payment-option" onclick="selectPayment('apple_pay')">
+                        <input type="radio" id="payment-apple_pay" name="payment" value="apple_pay">
+                        <label for="payment-apple_pay">Apple Pay</label>
+                    </div>
+                </div>
+                <small>Payments are processed by <a href="https://stripe.com" target="_blank" rel="noopener noreferrer" style="color: var(--accent-color);">Stripe</a>. </small>
+                <!-- <p class="refund-policy-link">
+                    <small></small> Click here to learn more about our <a href="#" id="open-refund-policy" role="button">Refunds, cancellations &amp; rescheduling</a> policies.</small>
+                </p>-->
+                <div class="error-message" id="payment-error"></div>
+            </div>
+        </div>
+
             <!-- Submit -->
             <div class="submit-section">
                 <!-- Error Messages Container -->
                 <div id="form-errors" class="form-errors" style="display: none;"></div>
                 
                 <button type="submit" class="btn-primary btn-sparkle" id="submit-booking-btn">
-                    📅 Confirm Booking
+                    Confirm Booking 
                 </button>
                 <p style="margin-top: 15px; font-size: 0.9rem; color: #666; text-align: center;">
-                    By submitting this form, you agree to our <a href="privacy-policy.html" target="_blank" style="color: var(--accent-color);">Privacy Policy</a> and terms and conditions.
+                    By submitting this form, you agree to our <a href="privacy-policy.html" target="_blank" style="color: var(--accent-color);">Privacy Policy</a>, the <a href="#" id="open-refund-policy-footer" style="color: var(--accent-color);">refund and cancellation policy</a>, and our terms and conditions.
                 </p>
                 <p style="margin-top: 10px; font-size: 0.75rem; color: #999; line-height: 1.6; text-align: center; max-width: 600px; margin: 10px auto 0;">
                     <strong>Safety Notice:</strong> This game is designed to be played in a safe environment. Please play responsibly, be aware of your surroundings, follow all local laws and regulations, and exercise caution when navigating to locations. We are not responsible for any accidents, injuries, losses, or damages that may occur during gameplay. Participants play at their own risk.
@@ -481,6 +695,59 @@
         </div>
     </div>
 
+    <!-- Refund policy modal -->
+    <div id="refund-policy-modal-overlay" class="modal-overlay" aria-hidden="true" role="dialog" aria-labelledby="refund-policy-modal-title">
+        <div class="modal-dialog wide">
+            <button type="button" class="modal-close" id="refund-policy-modal-close" aria-label="Close">&times;</button>
+            <h3 id="refund-policy-modal-title">📋 Refunds, cancellations &amp; rescheduling</h3>
+            <p class="refund-policy-intro">By booking, you agree to the following. For changes or cancellations, contact us using the email or phone on your confirmation.</p>
+            <ol class="refund-policy-list">
+                <li>
+                    <strong>Booking &amp; payment</strong>
+                    <p>Full payment is charged at the time you complete booking and payment (via Stripe).</p>
+                </li>
+                <li>
+                    <strong>Cancellation by you</strong>
+                    <ul>
+                        <li><strong>7+ days</strong> before your scheduled play date &amp; time: <strong>full refund</strong>.</li>
+                        <li><strong>3–6 days</strong> before: <strong>50% refund</strong>.</li>
+                        <li><strong>Less than 3 days</strong> before: <strong>no refund</strong>.</li>
+                    </ul>
+                </li>
+                <li>
+                    <strong>Rescheduling</strong>
+                    <p>One free reschedule per booking, subject to availability, if you request it <strong>before</strong> your scheduled play date and time and at least <strong>1 hour</strong> before the slot starts. Further changes may be treated as a new booking.</p>
+                </li>
+                <li>
+                    <strong>No-shows</strong>
+                    <p>If your group does not start the game on the scheduled date and time, <strong>no refund or credit</strong> is given.</p>
+                </li>
+                <li>
+                    <strong>Cancellation by us</strong>
+                    <p>If we must cancel (e.g. technical failure, incorrect materials delivered, operational error), you may choose a <strong>full refund</strong> or <strong>credit</strong> toward another available date.</p>
+                </li>
+                <li>
+                    <strong>Weather</strong>
+                    <p>The game is designed for normal outdoor play in public areas. <strong>Weather alone</strong> does not qualify for a refund unless safety authorities advise against being outdoors.</p>
+                </li>
+            </ol>
+        </div>
+    </div>
+
+    <!-- Payment modal (Stripe) -->
+    <div id="booking-payment-modal-overlay" class="modal-overlay" aria-hidden="true" role="dialog" aria-labelledby="payment-modal-title">
+        <div class="modal-dialog">
+            <button type="button" class="modal-close" id="payment-modal-close" aria-label="Close">&times;</button>
+            <h3 id="payment-modal-title">Complete payment</h3>
+            <div id="payment-modal-summary" aria-live="polite"></div>
+            <div id="payment-modal-mount"></div>
+            <div id="payment-modal-error"></div>
+            <div style="margin-top: 16px; text-align: right;">
+                <button type="button" class="btn-primary" id="payment-modal-pay-btn" style="display: none;">Pay now</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
@@ -488,6 +755,9 @@
     <!-- Firebase Configuration -->
     <script src="firebase-config.js"></script>
     <script src="database.js"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+    <script src="stripe-config.js"></script>
+    <script src="stripe-booking-payment.js"></script>
     
     <!-- EmailJS SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
@@ -539,6 +809,18 @@
                 }
             }
             return slots;
+        }
+
+        /** Format YYYY-MM-DD for the payment modal summary (local calendar date, UK wording). */
+        function formatSlotDateForPaymentSummary(isoDate) {
+            if (!isoDate) return '';
+            const d = new Date(isoDate + 'T12:00:00');
+            return d.toLocaleDateString('en-GB', {
+                weekday: 'long',
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            });
         }
 
         // Load available hours based on selected date and existing bookings
@@ -612,10 +894,10 @@
                     return;
                 }
                 
-                // Get all bookings for the selected date
+                // Only paid bookings reserve a slot (pending = unpaid / abandoned checkout — still contactable, does not block)
                 const snapshot = await dbRef.collection('bookings')
                     .where('date', '==', selectedDate)
-                    .where('status', 'in', ['pending', 'confirmed'])
+                    .where('status', 'in', ['confirmed', 'completed'])
                     .get();
 
                 const takenSlots = new Set();
@@ -732,9 +1014,10 @@
             const dbRef = localDb || (firebase && firebase.firestore ? firebase.firestore() : null);
             if (dbRef && isInitialized) {
                 try {
+                    // Only paid bookings reserve a slot (pending = unpaid / abandoned checkout — still contactable, does not block)
                     const snapshot = await dbRef.collection('bookings')
                         .where('date', '==', selectedDate)
-                        .where('status', 'in', ['pending', 'confirmed'])
+                        .where('status', 'in', ['confirmed', 'completed'])
                         .get();
 
                     snapshot.forEach(doc => {
@@ -953,26 +1236,28 @@
             });
             
             showFormErrors([]);
+            const paymentErrEl = document.getElementById('payment-error');
+            if (paymentErrEl) paymentErrEl.textContent = '';
             
             // Get form data
-            const timeHour = document.getElementById('time-hour').value;
-            const timeMinute = document.getElementById('time-minute').value;
+            const timeHour = document.getElementById('time-hour')?.value ?? '';
+            const timeMinute = document.getElementById('time-minute')?.value ?? '';
             const timeValue = timeHour && timeMinute ? `${timeHour}:${timeMinute}` : '';
             
             const formData = {
-                email: document.getElementById('email').value.trim(),
-                name: document.getElementById('name').value.trim(),
-                phone: document.getElementById('phone').value.trim(),
-                date: document.getElementById('date').value,
+                email: document.getElementById('email')?.value.trim() ?? '',
+                name: document.getElementById('name')?.value.trim() ?? '',
+                phone: document.getElementById('phone')?.value.trim() ?? '',
+                date: document.getElementById('date')?.value ?? '',
                 time: timeValue,
-                players: document.getElementById('players').value,
-                messageFrom: document.getElementById('message-from').value.trim(),
-                messageTo: document.getElementById('message-to').value.trim(),
-                personalMessage: document.getElementById('personal-message').value.trim(),
-                paymentMethod: document.querySelector('input[name="payment"]:checked')?.value || 'pending', // Payment disabled for testing - will integrate later
-                referral: document.getElementById('referral').value,
-                specialRequests: document.getElementById('special-requests').value.trim(),
-                emergencyContact: document.getElementById('emergency-contact').value.trim(),
+                players: document.getElementById('players')?.value ?? '',
+                messageFrom: document.getElementById('message-from')?.value.trim() ?? '',
+                messageTo: document.getElementById('message-to')?.value.trim() ?? '',
+                personalMessage: document.getElementById('personal-message')?.value.trim() ?? '',
+                paymentMethod: document.querySelector('input[name="payment"]:checked')?.value || 'pending',
+                referral: document.getElementById('referral')?.value ?? '',
+                specialRequests: document.getElementById('special-requests')?.value.trim() ?? '',
+                emergencyContact: document.getElementById('emergency-contact')?.value.trim() ?? '',
                 submittedAt: new Date().toISOString(),
                 status: 'pending'
             };
@@ -1049,20 +1334,22 @@
             
             // Personal message is now optional, no validation needed
             
-            // Payment validation disabled for testing - will integrate later
-            // if (!formData.paymentMethod) {
-            //     const paymentOptions = document.querySelectorAll('.payment-option');
-            //     paymentOptions.forEach(opt => {
-            //         opt.style.borderColor = '#e94560';
-            //         opt.style.borderWidth = '2px';
-            //         opt.style.backgroundColor = 'rgba(233, 69, 96, 0.05)';
-            //         if (!firstErrorField) firstErrorField = opt;
-            //     });
-            //     errors.push('Please select a payment method');
-            //     isValid = false;
-            // }
+            if (!formData.paymentMethod || formData.paymentMethod === 'pending') {
+                document.querySelectorAll('.payment-option').forEach(opt => {
+                    opt.style.borderColor = '#e94560';
+                    opt.style.borderWidth = '2px';
+                    opt.style.backgroundColor = 'rgba(233, 69, 96, 0.05)';
+                    if (!firstErrorField) firstErrorField = opt;
+                });
+                const pe = document.getElementById('payment-error');
+                if (pe) pe.textContent = 'Please choose how you would like to pay';
+                const payGroup = document.getElementById('payment-error')?.closest('.form-group');
+                if (payGroup) payGroup.classList.add('error');
+                errors.push('Please select a payment method');
+                isValid = false;
+            }
             
-            if (!formData.referral) {
+            if (document.getElementById('referral') && !formData.referral) {
                 markFieldError('referral', 'Please tell us how you found us');
                 errors.push('Please tell us how you found us');
                 isValid = false;
@@ -1103,7 +1390,7 @@
                 return;
             }
             
-            console.log('Validation passed');
+            console.log('[Booking] Validation passed');
             
             // Disable submit button
             const submitBtn = document.getElementById('submit-booking-btn');
@@ -1111,6 +1398,7 @@
             submitBtn.textContent = 'Processing...';
             
             try {
+                console.log('[Booking] Step 1: Firebase init');
                 // Save to Firebase
                 // Get db reference (use localDb to avoid conflict with database.js)
                 if (!localDb || !isInitialized) {
@@ -1123,15 +1411,97 @@
                 if (!dbRef) {
                     throw new Error('Database not available');
                 }
+                console.log('[Booking] Firebase ready');
                 
-                // Add booking to Firestore and get the document reference
-                const bookingRef = await dbRef.collection('bookings').add(formData);
+                const stripeCfg = window.STRIPE_CONFIG;
+                if (!stripeCfg || !stripeCfg.publishableKey || !stripeCfg.paymentApiUrl) {
+                    throw new Error('Stripe is not fully configured. In stripe-config.js add publishableKey and paymentApiUrl, deploy server/stripe-server.js, and set STRIPE_SECRET_KEY on the server.');
+                }
+
+                const numPlayers = parseInt(formData.players, 10) || 1;
+                const pricePerPlayerPence = stripeCfg.pricePerPlayerPence || 1200;
+                const amountPence = numPlayers * pricePerPlayerPence;
+
+                const bookingPayload = Object.assign({}, formData, {
+                    paymentStatus: 'pending',
+                    amountPence: amountPence,
+                    currency: stripeCfg.currency || 'gbp',
+                });
+
+                console.log('[Booking] Step 2: Saving booking draft to Firestore…');
+                const bookingRef = await dbRef.collection('bookings').add(bookingPayload);
                 const bookingId = bookingRef.id;
-                
+                console.log('[Booking] Booking document created, id:', bookingId);
+
+                let clientSecret;
+                try {
+                    console.log('[Booking] Step 3: Requesting PaymentIntent from payment server…');
+                    clientSecret = await window.createStripePaymentIntent(amountPence, bookingId, formData.email);
+                    console.log('[Booking] Step 4: Opening Stripe payment modal, method:', formData.paymentMethod);
+                } catch (setupErr) {
+                    console.error('[Booking] createStripePaymentIntent failed:', setupErr);
+                    await dbRef.collection('bookings').doc(bookingId).update({
+                        paymentStatus: 'setup_failed',
+                        paymentError: String(setupErr.message || setupErr),
+                    });
+                    throw setupErr;
+                }
+
+                let paymentIntent;
+                try {
+                    paymentIntent = await window.BookingStripePayment.showModal({
+                        clientSecret: clientSecret,
+                        method: formData.paymentMethod,
+                        email: formData.email,
+                        amountPence: amountPence,
+                        amountLabel: 'Letter Left Behind — ' + numPlayers + ' player(s)',
+                        summary: {
+                            slotDateLabel: formatSlotDateForPaymentSummary(formData.date),
+                            slotTime: formData.time || '',
+                            players: numPlayers,
+                            pricePerPlayerPence: pricePerPlayerPence,
+                            totalPence: amountPence,
+                            currency: stripeCfg.currency || 'gbp',
+                            contactName: formData.name,
+                            contactEmail: formData.email
+                        }
+                    });
+                    console.log('[Booking] Step 5: Payment succeeded, paymentIntent.id:', paymentIntent && paymentIntent.id);
+                } catch (payErr) {
+                    if (payErr && (payErr.message === 'Payment cancelled' || String(payErr.message).indexOf('cancelled') !== -1)) {
+                        await dbRef.collection('bookings').doc(bookingId).update({
+                            paymentStatus: 'checkout_cancelled',
+                        });
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = '📅 Confirm Booking';
+                        // No user-facing message: draft remains in DB for admin follow-up only; user can submit a fresh booking
+                        return;
+                    }
+                    await dbRef.collection('bookings').doc(bookingId).update({
+                        paymentStatus: 'payment_failed',
+                        paymentError: String(payErr.message || payErr),
+                    });
+                    throw payErr;
+                }
+
+                console.log('[Booking] Step 6: Marking booking paid in Firestore…');
+                await dbRef.collection('bookings').doc(bookingId).update({
+                    paymentStatus: 'paid',
+                    stripePaymentIntentId: paymentIntent.id,
+                    paymentCompletedAt: firebase.firestore.Timestamp.now(),
+                    status: 'confirmed',
+                });
+
+                const formDataPaid = Object.assign({}, formData, {
+                    paymentStatus: 'paid',
+                    stripePaymentIntentId: paymentIntent.id,
+                });
+
                 // Create game session linked to this booking
+                console.log('[Booking] Step 7: Creating game session…');
                 if (window.DatabaseService && window.DatabaseService.isInitialized()) {
                     try {
-                        const sessionId = await window.DatabaseService.createGameSessionFromBooking(bookingId, formData);
+                        const sessionId = await window.DatabaseService.createGameSessionFromBooking(bookingId, formDataPaid);
                         if (sessionId) {
                             console.log('Game session created:', sessionId);
                             const gameLink = `${window.location.origin}${window.location.pathname.replace('booking.html', 'game.html')}?bookingId=${bookingId}`;
@@ -1139,12 +1509,13 @@
                             await dbRef.collection('bookings').doc(bookingId).update({
                                 gameSessionId: sessionId,
                                 gameLink: gameLink,
-                                updatedAt: firebase.firestore.Timestamp.now()
+                                updatedAt: firebase.firestore.Timestamp.now(),
+                                status: 'completed',
                             });
                             
                             // Send email to user with game link
                             try {
-                                await sendGameLinkEmail(formData.email, gameLink, formData);
+                                await sendGameLinkEmail(formData.email, gameLink, formDataPaid);
                             } catch (emailError) {
                                 console.error('Error sending email:', emailError);
                                 // Don't fail the booking if email fails
@@ -1180,8 +1551,12 @@
                 }
                 
             } catch (error) {
-                console.error('Error saving booking:', error);
-                alert('There was an error processing your booking. Please try again or contact us directly.');
+                console.error('[Booking] FAILED at some step — full error:', error);
+                if (error && error.stack) console.error('[Booking] Stack:', error.stack);
+                var msg = error && error.message ? error.message : String(error);
+                alert(msg.indexOf('Stripe is not fully configured') !== -1 || msg.indexOf('stripe-config') !== -1
+                    ? msg
+                    : 'There was an error processing your booking: ' + msg + '\n\nOpen the browser console (F12) and look for [Booking] / [Stripe API] logs. Please try again or contact us.');
                 submitBtn.disabled = false;
                 submitBtn.textContent = '📅 Confirm Booking';
             }
@@ -1189,7 +1564,10 @@
 
         // Show error message
         function showError(fieldId, message) {
-            const formGroup = document.getElementById(fieldId).closest('.form-group');
+            const fieldEl = document.getElementById(fieldId);
+            if (!fieldEl) return;
+            const formGroup = fieldEl.closest('.form-group');
+            if (!formGroup) return;
             formGroup.classList.add('error');
             const errorDiv = formGroup.querySelector('.error-message');
             if (errorDiv) {
@@ -1313,6 +1691,58 @@
                 }
             }
         };
+
+        (function initStripePaymentOption() {
+            function selectDefault() {
+                if (typeof window.selectPayment === 'function') {
+                    window.selectPayment('card');
+                }
+            }
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', selectDefault);
+            } else {
+                selectDefault();
+            }
+        })();
+
+        document.addEventListener('DOMContentLoaded', function () {
+            function openRefundModal() {
+                var o = document.getElementById('refund-policy-modal-overlay');
+                if (o) {
+                    o.style.display = 'flex';
+                    o.setAttribute('aria-hidden', 'false');
+                }
+            }
+            function closeRefundModal() {
+                var o = document.getElementById('refund-policy-modal-overlay');
+                if (o) {
+                    o.style.display = 'none';
+                    o.setAttribute('aria-hidden', 'true');
+                }
+            }
+            var link = document.getElementById('open-refund-policy');
+            var linkFoot = document.getElementById('open-refund-policy-footer');
+            var closeBtn = document.getElementById('refund-policy-modal-close');
+            var overlay = document.getElementById('refund-policy-modal-overlay');
+            if (link) {
+                link.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    openRefundModal();
+                });
+            }
+            if (linkFoot) {
+                linkFoot.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    openRefundModal();
+                });
+            }
+            if (closeBtn) closeBtn.addEventListener('click', closeRefundModal);
+            if (overlay) {
+                overlay.addEventListener('click', function (e) {
+                    if (e.target === overlay) closeRefundModal();
+                });
+            }
+        });
     </script>
 </body>
 </html>

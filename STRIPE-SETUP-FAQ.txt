@@ -1,0 +1,45 @@
+Letter Left Behind — Stripe & local payment FAQ
+================================================
+
+1) What is paymentApiUrl?
+   It is the full web address of the tiny Node server in this project (server/stripe-server.js).
+   Your browser calls it to create a "PaymentIntent" using your SECRET key on the server only.
+   A Git repository URL (e.g. github.com/...) does NOT work — Git is not a running server.
+
+   For local testing:
+   - Booking page:  http://localhost:8000/booking.html   (or whatever port you use)
+   - Payment API:   http://localhost:3001/create-payment-intent
+   You run BOTH: static server for HTML + "npm start" in the /server folder.
+
+2) Do you need a published domain?
+   Not for local testing. For real customers on the internet, you host the site and the
+   payment API on HTTPS domains and update stripe-config.js paymentApiUrl accordingly.
+
+3) Where does STRIPE_SECRET_KEY go?
+   ONLY in server/.env (create from server/.env.example). Never in stripe-config.js or Git.
+   The file server/.env is listed in .gitignore. Get the secret key from:
+   Stripe Dashboard → Developers → API keys → Secret key (sk_test_... or sk_live_...).
+
+4) Google Pay / Apple Pay
+   You do not need separate Google or Apple merchant accounts for this integration.
+   Stripe handles wallets through the same Stripe keys. Optional: enable Apple Pay for
+   your domain in Stripe Dashboard (Settings → Payment methods → Apple Pay).
+
+5) Three options on the booking page
+   They are optional UX choices. You could use a single "Pay with Stripe" if you prefer.
+   Card vs Google Pay vs Apple Pay only changes which UI appears in the popup after
+   "Confirm booking" (browser support varies).
+
+6) Webhooks (optional)
+   Stripe Dashboard → Developers → Webhooks. Add a URL your backend exposes to receive
+   events like payment_intent.succeeded. Useful if your server restarts or you want
+   receipts independent of the browser. Not required for the basic flow.
+
+7) User journey (summary)
+   Fill form → choose payment method (radio) → Confirm booking → payment popup
+   (card or wallet) → success screen if payment succeeds.
+
+8) If nothing happens when clicking Card / Google Pay / Apple Pay
+   Those clicks only SELECT the method. Payment runs after "Confirm booking".
+   You must also: set paymentApiUrl in stripe-config.js, create server/.env with
+   STRIPE_SECRET_KEY, and run: cd server && npm start

@@ -24,8 +24,8 @@
         .hamburger-btn { display: none; background: none; border: none; cursor: pointer; padding: 8px; flex-direction: column; justify-content: center; gap: 5px; }
         .hamburger-btn span { display: block; width: 24px; height: 3px; background: white; border-radius: 2px; }
         .landing-nav-dropdown { display: none; position: absolute; top: 100%; right: 0; background: var(--accent-color); padding: 12px; border-radius: 8px; box-shadow: 0 8px 20px rgba(0,0,0,0.2); min-width: 180px; z-index: 100; margin-top: 8px; }
-        .landing-nav-dropdown a { display: block; padding: 10px 16px; border-radius: 6px; }
-        .landing-nav-dropdown a:hover { background: #ffd700; color: var(--primary-color); }
+        .landing-nav-dropdown a { display: block; padding: 10px 16px; border-radius: 6px; color: white !important; text-decoration: none !important; font-size: 0.95rem; font-weight: 500; }
+        .landing-nav-dropdown a:hover { background: #ffd700; color: var(--primary-color) !important; }
         .landing-nav-wrapper { position: relative; }
         @media (max-width: 768px) {
             .landing-nav { display: none; }
@@ -37,24 +37,58 @@
         .hero-title { font-family: 'Cinzel', serif; font-size: 2.6rem; font-weight: 700; background: linear-gradient(135deg, #ffd700, #ffed4e); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 10px; line-height: 1.2; }
         .hero-subtitle { font-size: 1.2rem; color: rgba(255,255,255,0.9); margin-bottom: 46px; font-weight: 300; }
         .price-badge { display: inline-block; background: var(--accent-color); color: white; padding: 10px 24px; border-radius: 50px; font-size: 1.1rem; font-weight: 700; margin-bottom: 24px; box-shadow: 0 4px 15px rgba(233,69,96,0.4); }
-        .feature-section { background: var(--card-bg); color: var(--text-dark); border-radius: 20px; padding: 32px; margin-bottom: 28px; box-shadow: var(--shadow-light); }
+        .feature-section { border-radius: 20px; padding: 32px; margin-bottom: 28px; }
         .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-top: 24px; }
         .feature-card { text-align: center; padding: 22px; background: rgba(102,126,234,0.05); border-radius: 15px; border: 2px solid rgba(102,126,234,0.1); transition: transform 0.3s, box-shadow 0.3s; }
         .feature-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.15); }
         .feature-icon { font-size: 2.5rem; margin-bottom: 12px; }
         .feature-title { font-family: 'Cinzel', serif; font-size: 1.2rem; color: var(--primary-color); margin-bottom: 8px; font-weight: 600; }
         .feature-text { color: #666; line-height: 1.6; font-size: 0.95rem; }
-        .section-title { font-family: 'Cinzel', serif; font-size: 2rem; color: var(--primary-color); margin-bottom: 16px; text-align: center; }
-        .testimonials-section, .faq-section, .about-section { background: var(--card-bg); color: var(--text-dark); border-radius: 20px; padding: 32px; margin-bottom: 28px; box-shadow: var(--shadow-light); }
+        .section-title { font-family: 'Cinzel', serif; font-size: 2rem; margin-bottom: 16px; text-align: center; }
+        .section-accent { background: linear-gradient(135deg, rgba(102,126,234,0.2), rgba(118,75,162,0.2)); color: white; border-radius: 20px; padding: 32px; margin-bottom: 28px; border: 1px solid rgba(255,255,255,0.08); }
+        .section-accent .section-title { color: white; }
+        .section-accent .about-text { color: rgba(255,255,255,0.95); }
+        .section-accent .about-highlight { background: rgba(255,255,255,0.1); border-left-color: #ffd700; }
+        .section-accent .about-highlight p, .section-accent .about-highlight strong { color: white; }
+        .section-accent .about-bullet, .section-accent .feature-card { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.18); }
+        .section-accent .feature-title { color: #f5f5f5; }
+        .section-accent .feature-text { color: #e8e8f0; }
+        /* Intro = subtle; letter box = primary (swapped from typical hierarchy) */
+        .section-accent .about-intro { color: rgba(255,255,255,0.72) !important; font-size: 0.980rem; font-weight: 300; line-height: 1.75; letter-spacing: 0.01em; }
+        .section-accent .about-intro strong { color: rgba(255,255,255,0.88); font-weight: 500; }
+        .about-highlight-soft { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); padding: 20px 24px; border-radius: 10px; margin: 20px 0; width: 100%; box-sizing: border-box; }
+        .section-accent .about-highlight-soft .about-letter-aside { margin: 0; font-size: 1.05rem; font-weight: 400; line-height: 1.8; color: #f0f0f5 !important; letter-spacing: normal; }
+        .section-accent .about-highlight-soft .about-letter-aside strong { color: #fff; font-weight: 600; }
+        .about-highlight-soft .about-highlight-lead { color: #f5f5f5; font-weight: 500; display: block; margin-bottom: 0.5rem; font-size: 1rem; }
+        .section-accent .about-bullet-text { color: #e8e8f0 !important; }
+        .section-card { background: rgba(255,255,255,0.06); color: var(--text-light); border-radius: 20px; padding: 32px; margin-bottom: 28px; border: 1px solid rgba(255,255,255,0.08); }
+        .section-card .section-title { color: white; }
+        .section-card .about-text { color: rgba(255,255,255,0.9); }
+        #why-choose.section-card .feature-card { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.18); }
+        #why-choose.section-card .feature-title { color: #f5f5f5; }
+        #why-choose.section-card .feature-text { color: #e8e8f0; }
+        .testimonials-section { background: rgba(255,255,255,0.06); color: var(--text-light); border-radius: 20px; padding: 32px; margin-bottom: 28px; border: 1px solid rgba(255,255,255,0.08); }
+        .testimonials-section .section-title { color: white; }
         .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 24px; }
-        .testimonial-card { background: rgba(102,126,234,0.05); padding: 20px; border-radius: 15px; border-left: 4px solid var(--accent-color); }
-        .testimonial-text { font-style: italic; color: #555; margin-bottom: 12px; line-height: 1.6; font-size: 0.95rem; }
-        .testimonial-author { font-weight: 600; color: var(--primary-color); font-size: 0.9rem; }
-        .faq-item { padding: 16px 0; border-bottom: 1px solid #eee; }
-        .faq-item:last-child { border-bottom: none; }
-        .faq-question { font-weight: 600; color: var(--primary-color); margin-bottom: 8px; font-size: 1.05rem; }
-        .faq-answer { color: #555; line-height: 1.6; font-size: 0.95rem; }
+        .testimonial-card { background: rgba(255,255,255,0.08); padding: 20px; border-radius: 15px; border-left: 4px solid var(--accent-color); }
+        .testimonial-text { font-style: italic; color: rgba(255,255,255,0.9); margin-bottom: 12px; line-height: 1.6; font-size: 0.95rem; }
+        .testimonial-author { font-weight: 600; color: #ffd700; font-size: 0.9rem; }
+        .faq-item { padding: 0; margin-bottom: 8px; border-radius: 12px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); overflow: hidden; }
+        .faq-question { font-weight: 600; color: white; font-size: 1.05rem; padding: 16px 48px 16px 20px; cursor: pointer; position: relative; user-select: none; transition: background 0.2s; }
+        .faq-question:hover { background: rgba(255,255,255,0.08); }
+        .faq-question::after { content: '+'; position: absolute; right: 20px; top: 50%; transform: translateY(-50%); font-size: 1.3rem; font-weight: 400; opacity: 0.8; transition: transform 0.25s; }
+        .faq-item.open .faq-question::after { content: '−'; transform: translateY(-50%) rotate(0deg); }
+        .faq-answer { color: rgba(255,255,255,0.9); line-height: 1.6; font-size: 0.95rem; padding: 0 20px; max-height: 0; overflow: hidden; transition: max-height 0.35s ease, padding 0.3s ease; }
+        .faq-item.open .faq-answer { max-height: 30em; padding: 6px 20px 16px; }
         .about-text { color: #555; line-height: 1.7; font-size: 1rem; max-width: 800px; margin: 0 auto; text-align: center; }
+        .about-section .about-intro { margin-bottom: 24px; text-align: left; }
+        .about-highlight { background: linear-gradient(135deg, rgba(233,69,96,0.12), rgba(102,126,234,0.08)); border-left: 4px solid var(--accent-color); padding: 24px 28px; border-radius: 12px; margin: 24px 0; }
+        .about-highlight p { color: var(--primary-color); font-size: 1.1rem; line-height: 1.7; margin: 0; font-weight: 500; }
+        .about-highlight strong { color: var(--accent-color); }
+        .about-bullets { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 20px; }
+        .about-bullet { display: flex; align-items: flex-start; gap: 12px; padding: 16px; background: rgba(102,126,234,0.05); border-radius: 10px; }
+        .about-bullet-icon { font-size: 1.5rem; flex-shrink: 0; }
+        .about-bullet-text { color: #555; line-height: 1.6; font-size: 0.95rem; }
         .cta-section { text-align: center; padding: 40px 20px; background: linear-gradient(135deg, rgba(102,126,234,0.2), rgba(118,75,162,0.2)); border-radius: 20px; margin-bottom: 32px; }
         .cta-title { font-family: 'Cinzel', serif; font-size: 2rem; color: white; margin-bottom: 12px; }
         .cta-text { font-size: 1.1rem; color: rgba(255,255,255,0.9); margin-bottom: 24px; max-width: 560px; margin-left: auto; margin-right: auto; }
@@ -76,14 +110,13 @@
 <body>
     <div class="landing-banner">
         <a href="index.html" class="landing-banner-logo">
-            <img src="images/letter-left-behind-logo.png" alt="Letter Left Behind" onerror="this.style.display='none'">
+            <img src="images/logo.png" alt="Letter Left Behind" onerror="this.style.display='none'">
         </a>
         <div class="landing-nav-wrapper">
             <button class="hamburger-btn" id="hamburger-btn" aria-label="Open menu" aria-expanded="false">
                 <span></span><span></span><span></span>
             </button>
             <nav class="landing-nav" aria-label="Main navigation">
-                <a href="#about">About</a>
                 <a href="#how-it-works">How It Works</a>
                 <a href="#why-choose">Why Choose Us</a>
                 <a href="#faq">FAQ</a>
@@ -91,7 +124,6 @@
                 <a href="booking.html">Book Now</a>
             </nav>
             <div class="landing-nav-dropdown" id="nav-dropdown">
-                <a href="#about">About</a>
                 <a href="#how-it-works">How It Works</a>
                 <a href="#why-choose">Why Choose Us</a>
                 <a href="#faq">FAQ</a>
@@ -128,10 +160,44 @@
             <img src="images/letter-left-behind-logo.png" alt="Letter Left Behind - London Treasure Hunt" class="hero-logo" onerror="this.style.display='none';">
             <h1 class="hero-title">Letter Left Behind</h1>
             <p class="hero-subtitle">A Time-Traveling Treasure Hunt Through London's History</p>
-            <a href="booking.html" class="btn-booking"><s>Just £15 per person</s><br>Free! only need your feedback</a>
+            <a href="booking.html" class="btn-booking">Just £12 per person</a>
         </div>
 
-        <section class="feature-section" id="why-choose">
+        <section class="about-section feature-section section-accent" id="about">
+            <h2 class="section-title">More Than a Mystery Walk</h2>
+            <p class="about-intro">Letter Left Behind is not just another treasure hunt or mystery walk. It's a time-travel experience where you solve clues across London's historic landmarks—and at the end, <strong>receive your own personalised letter from 1800</strong>, written just for you or someone you love.</p>
+            <div class="about-highlight-soft">
+                <p class="about-letter-aside">Your personalised lost letter from 1800 — When you book, you can add a heartfelt message, dedication, or surprise for the recipient. As you complete the journey, the letter is revealed piece by piece. At the final location, the full, personalised message from the past is yours to keep. A unique keepsake that bridges centuries.</p>
+            </div>
+            <div class="about-bullets">
+                <div class="about-bullet">
+                    <span class="about-bullet-icon">📍</span>
+                    <span class="about-bullet-text">Explore 10 iconic London locations with clues and riddles</span>
+                </div>
+                <div class="about-bullet">
+                    <span class="about-bullet-icon">✉️</span>
+                    <span class="about-bullet-text">Unlock a personalised message that travels through time to reach you</span>
+                </div>
+                <div class="about-bullet">
+                    <span class="about-bullet-icon">🎁</span>
+                    <span class="about-bullet-text">Perfect for couples, families, and gift surprises</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="feature-section section-card" id="how-it-works">
+            <h2 class="section-title">How It Works</h2>
+            <div style="max-width: 760px; margin: 0 auto;">
+                <p class="about-text" style="margin-bottom: 16px;">
+                    Master Archibald guides you through 10 locations across central London. At each stop, solve clues and answer questions based on what you discover. As you progress, you'll uncover pieces of a letter left behind from 1800—a message that has traveled through time to reach you.
+                </p>
+                <p class="about-text">
+                    <strong>Perfect for:</strong> Couples, friends, families, or anyone who loves adventure, history, and mystery. Play solo or as a group!
+                </p>
+            </div>
+        </section>
+
+        <section class="feature-section section-card" id="why-choose">
             <h2 class="section-title">Why Choose This Adventure?</h2>
             <div class="feature-grid">
                 <div class="feature-card">
@@ -152,28 +218,10 @@
             </div>
         </section>
 
-        <section class="about-section" id="about">
-            <h2 class="section-title">About Letter Left Behind</h2>
-            <p class="about-text">
-                Letter Left Behind is a unique outdoor treasure hunt experience in London that blends time-travel storytelling with real-world exploration. Walk through Waterloo, Trafalgar Square, Charing Cross, and other iconic spots while solving riddles and uncovering a personalised letter from the past. A memorable gift and activity for locals and visitors alike.
-            </p>
-        </section>
-
-        <section class="feature-section" id="how-it-works">
-            <h2 class="section-title">How It Works</h2>
-            <div style="max-width: 760px; margin: 0 auto;">
-                <p class="about-text" style="margin-bottom: 16px;">
-                    Master Archibald guides you through 10 locations across central London. At each stop, solve clues and answer questions based on what you discover. As you progress, you'll uncover pieces of a letter left behind from 1800—a message that has traveled through time to reach you.
-                </p>
-                <p class="about-text">
-                    <strong>Perfect for:</strong> Couples, friends, families, or anyone who loves adventure, history, and mystery. Play solo or as a group!
-                </p>
-            </div>
-        </section>
 
 
 
-        <section class="faq-section" id="faq">
+        <section class="faq-section section-card" id="faq">
             <h2 class="section-title">Frequently Asked Questions</h2>
             <div class="faq-item">
                 <div class="faq-question">How long does the treasure hunt take?</div>
@@ -185,7 +233,7 @@
             </div>
             <div class="faq-item">
                 <div class="faq-question">Can I play with a group?</div>
-                <div class="faq-answer">Absolutely! The game is designed for solo players, couples, families, or groups. Everyone uses the same link to play together.</div>
+                <div class="faq-answer">Absolutely! The game is designed for solo players, couples, families, or groups. You'll receive a unique link to play together.</div>
             </div>
             <div class="faq-item">
                 <div class="faq-question">Is it suitable for children?</div>
@@ -193,7 +241,15 @@
             </div>
             <div class="faq-item">
                 <div class="faq-question">Can I give this as a gift?</div>
-                <div class="faq-answer">Yes! Add a personalised message that will be revealed at the end of the game. Perfect for birthdays, anniversaries, or surprises.</div>
+                <div class="faq-answer">Yes! We recommend you adding a personalised message in your gift, that will be revealed at the end of the game. Perfect for birthdays, anniversaries, or surprises.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">How do player(s) get their personalised lost letter from 1800?</div>
+                <div class="faq-answer">When you book, you can add a personal message, dedication, or surprise for the player(s). </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">How does the personalised letter work?</div>
+                <div class="faq-answer">When you reach the final stage of the game, your full personalised letter—written as if from 1800 will be delivered to the player(s). The letter is crafted from your words, woven into our time-travel story.</div>
             </div>
         </section>
 
@@ -228,5 +284,24 @@
             <a href="tel:+447435672248">📞 Call</a>
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.faq-item').forEach(function(item) {
+                var q = item.querySelector('.faq-question');
+                if (q) {
+                    q.setAttribute('role', 'button');
+                    q.setAttribute('tabindex', '0');
+                    q.setAttribute('aria-expanded', 'false');
+                    q.addEventListener('click', function() {
+                        var open = item.classList.toggle('open');
+                        q.setAttribute('aria-expanded', open);
+                    });
+                    q.addEventListener('keydown', function(e) {
+                        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); q.click(); }
+                    });
+                }
+            });
+        });
+    </script>
 </body>
 </html>
