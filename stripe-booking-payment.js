@@ -110,11 +110,50 @@
             '</p>';
     }
 
+    /**
+     * After payment succeeds, keep the overlay up with a processing message until
+     * booking.html finishes Firestore / game session work and calls hideModal().
+     * Avoids flashing the main booking form for 1–2 seconds.
+     */
+    function showProcessingState() {
+        var overlay = getOverlay();
+        var titleEl = document.getElementById('payment-modal-title');
+        var mount = document.getElementById('payment-modal-mount');
+        var summaryEl = document.getElementById('payment-modal-summary');
+        var errEl = document.getElementById('payment-modal-error');
+        var payBtn = document.getElementById('payment-modal-pay-btn');
+        var closeBtn = document.getElementById('payment-modal-close');
+        if (errEl) errEl.textContent = '';
+        if (payBtn) {
+            payBtn.style.display = 'none';
+            payBtn.onclick = null;
+        }
+        if (closeBtn) closeBtn.style.visibility = 'hidden';
+        if (summaryEl) {
+            summaryEl.innerHTML = '';
+            summaryEl.style.display = 'none';
+        }
+        if (titleEl) titleEl.textContent = 'Processing your booking…';
+        if (mount) {
+            mount.innerHTML =
+                '<div class="payment-modal-processing" role="status" aria-live="polite">' +
+                '<p class="payment-modal-processing-lead">Payment received</p>' +
+                '<p class="payment-modal-processing-sub">Setting up your game link — please wait…</p>' +
+                '</div>';
+        }
+        if (overlay) {
+            overlay.style.display = 'flex';
+            overlay.setAttribute('aria-hidden', 'false');
+        }
+    }
+
     function hideModal() {
         var overlay = getOverlay();
         if (!overlay) return;
         overlay.style.display = 'none';
         overlay.setAttribute('aria-hidden', 'true');
+        var closeBtn = document.getElementById('payment-modal-close');
+        if (closeBtn) closeBtn.style.visibility = '';
         var mount = document.getElementById('payment-modal-mount');
         if (mount) mount.innerHTML = '';
         var summaryEl = document.getElementById('payment-modal-summary');
@@ -129,6 +168,8 @@
             payBtn.style.display = 'none';
             payBtn.onclick = null;
         }
+        var titleEl = document.getElementById('payment-modal-title');
+        if (titleEl) titleEl.textContent = 'Complete payment';
     }
 
     window.BookingStripePayment = {
@@ -241,7 +282,7 @@
                                         if (errEl) errEl.textContent = result.error.message;
                                         return;
                                     }
-                                    hideModal();
+                                    showProcessingState();
                                     resolve(result.paymentIntent);
                                 });
                         };
@@ -276,7 +317,7 @@
                                 return;
                             }
                             ev.complete('success');
-                            hideModal();
+                            showProcessingState();
                             resolve(result.paymentIntent);
                         })
                         .catch(function (e) {

@@ -368,6 +368,25 @@
             color: #6c757d;
         }
 
+        #booking-payment-modal-overlay .payment-modal-processing {
+            padding: 20px 8px 12px;
+            text-align: center;
+        }
+
+        #booking-payment-modal-overlay .payment-modal-processing-lead {
+            margin: 0 0 10px 0;
+            font-size: 1.08rem;
+            font-weight: 700;
+            color: #1a1a2e;
+        }
+
+        #booking-payment-modal-overlay .payment-modal-processing-sub {
+            margin: 0;
+            font-size: 0.95rem;
+            color: #5c6370;
+            line-height: 1.5;
+        }
+
         .submit-section {
             margin-top: 30px;
             text-align: center;
@@ -1527,7 +1546,7 @@
                     }
                 }
                 
-                // Show success message with game link
+                // Show success first (behind the payment overlay), then dismiss overlay — avoids a flash of the booking form
                 const introEl = document.getElementById('booking-intro');
                 const formEl = document.getElementById('booking-form');
                 if (introEl) introEl.style.display = 'none';
@@ -1535,10 +1554,9 @@
                 document.getElementById('booking-success').classList.add('show');
                 document.getElementById('confirmation-email').textContent = formData.email;
                 
-                // Display game link if available
+                const gameLink = `${window.location.origin}${window.location.pathname.replace('booking.html', 'game.html')}?bookingId=${bookingId}`;
                 const gameLinkElement = document.getElementById('game-link');
                 if (gameLinkElement) {
-                    const gameLink = `${window.location.origin}${window.location.pathname.replace('booking.html', 'game.html')}?bookingId=${bookingId}`;
                     gameLinkElement.innerHTML = `
                         <p style="margin-top: 15px; padding: 15px; background: rgba(102, 126, 234, 0.1); border-radius: 8px; border-left: 4px solid #667eea;">
                             <strong>🎮 Your Game Link:</strong><br>
@@ -1549,6 +1567,12 @@
                         </p>
                     `;
                 }
+                
+                if (window.BookingStripePayment && typeof window.BookingStripePayment.hideModal === 'function') {
+                    window.BookingStripePayment.hideModal();
+                }
+                const successEl = document.getElementById('booking-success');
+                if (successEl) successEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 
             } catch (error) {
                 console.error('[Booking] FAILED at some step — full error:', error);
