@@ -142,7 +142,11 @@
                 '</div>';
         }
         if (overlay) {
+            overlay.classList.remove('payment-overlay-hidden');
             overlay.style.display = 'flex';
+            overlay.style.visibility = 'visible';
+            overlay.style.opacity = '1';
+            overlay.style.pointerEvents = '';
             overlay.setAttribute('aria-hidden', 'false');
         }
     }
@@ -150,7 +154,11 @@
     function hideModal() {
         var overlay = getOverlay();
         if (!overlay) return;
+        overlay.classList.add('payment-overlay-hidden');
         overlay.style.display = 'none';
+        overlay.style.visibility = 'hidden';
+        overlay.style.opacity = '0';
+        overlay.style.pointerEvents = 'none';
         overlay.setAttribute('aria-hidden', 'true');
         var closeBtn = document.getElementById('payment-modal-close');
         if (closeBtn) closeBtn.style.visibility = '';
@@ -212,7 +220,11 @@
 
                 if (closeBtn) closeBtn.onclick = onClose;
 
+                overlay.classList.remove('payment-overlay-hidden');
                 overlay.style.display = 'flex';
+                overlay.style.visibility = 'visible';
+                overlay.style.opacity = '1';
+                overlay.style.pointerEvents = '';
                 overlay.setAttribute('aria-hidden', 'false');
 
                 if (method === 'card') {
@@ -334,7 +346,7 @@
                             errEl.textContent =
                                 method === 'google_pay'
                                     ? 'Google Pay is not available in this browser. Use Chrome (Android/desktop) or choose Card.'
-                                    : 'Apple Pay is not available. Use Safari on an iPhone, iPad, or Mac, or choose Card.';
+                                    : 'Apple Pay is not available in this browser session. Use Safari on iPhone/iPad, or Mac Safari with Wallet set up, or choose Card. In Stripe Dashboard → Settings → Payment methods, add your domain for Apple Pay if you have not already.';
                         }
                         if (payBtn) payBtn.style.display = 'none';
                         return;
@@ -350,7 +362,7 @@
                     if (method === 'apple_pay' && !result.applePay) {
                         if (errEl) {
                             errEl.textContent =
-                                'Apple Pay is not available here. Use Safari on an Apple device, or choose Card.';
+                                'Apple Pay cannot start here (browser or domain check). Try Safari on an Apple device, ensure HTTPS, register letterleftbehind.com under Stripe → Settings → Payment method domains, or choose Card.';
                         }
                         if (payBtn) payBtn.style.display = 'none';
                         return;

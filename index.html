@@ -16,8 +16,19 @@
     <style>
         .landing-container { max-width: 1200px; margin: 0 auto; padding: 24px 20px; }
         .landing-banner { background: var(--accent-color); padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
-        .landing-banner-logo { display: flex; align-items: center; }
-        .landing-banner-logo img { height: 40px; width: auto; }
+        .landing-banner-logo {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 10px;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: background 0.25s, color 0.25s;
+        }
+        .landing-banner-logo img { height: 50px; width: auto; display: block; }
+        /* Logo link is the <a> itself (same yellow hover as nav) */
+        .landing-banner-logo:hover {
+            background: #ffd700;
+        }
         .landing-nav { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 12px; }
         .landing-nav a { color: white; text-decoration: none; font-size: 0.95rem; padding: 8px 16px; border-radius: 8px; transition: all 0.25s; font-weight: 500; }
         .landing-nav a:hover { color: var(--primary-color); background: #ffd700; }

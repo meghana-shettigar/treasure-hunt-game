@@ -21,6 +21,17 @@
             margin-bottom: 40px;
         }
 
+        .booking-header .booking-logo-link {
+            display: inline-block;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: background 0.25s;
+        }
+
+        .booking-header .booking-logo-link:hover {
+            background: #ffd700;
+        }
+
         .booking-intro {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
@@ -63,6 +74,7 @@
 
         .form-group {
             margin-bottom: 20px;
+            scroll-margin-top: 96px;
         }
 
         .form-group label {
@@ -217,6 +229,14 @@
             justify-content: center;
             padding: 20px;
             box-sizing: border-box;
+        }
+
+        /* Force-hide payment overlay after success (some browsers need !important) */
+        #booking-payment-modal-overlay.payment-overlay-hidden {
+            display: none !important;
+            visibility: hidden !important;
+            pointer-events: none !important;
+            opacity: 0 !important;
         }
 
         .modal-dialog {
@@ -509,7 +529,7 @@
     <div class="booking-container">
         <div class="booking-header">
             <div class="time-machine-icon" style="text-align: center; margin-bottom: 20px;">
-                <a href="index.html" style="text-decoration: none; display: inline-block;">
+                <a href="index.html" class="booking-logo-link" style="text-decoration: none; display: inline-block;">
                     <img src="images/letter-left-behind-logo.png" alt="Letter Left Behind Logo" style="max-width: 300px; height: auto;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                 </a>
                 <span style="display:none;">⏰</span>
@@ -527,7 +547,7 @@
         </div>
 
         <!-- Booking Form -->
-        <form id="booking-form" class="booking-form">
+        <form id="booking-form" class="booking-form" novalidate>
             <!-- Contact Information -->
             <div class="form-section">
                 <h3>📧 Contact Information</h3>
@@ -704,6 +724,7 @@
             <div style="font-size: 4rem; margin-bottom: 20px;">🎉</div>
             <h2>Booking Confirmed!</h2>
             <p>Thank you for booking your adventure!</p>
+            <p id="booking-slot-summary" class="booking-slot-summary" style="margin-top: 12px; font-size: 1.05rem; font-weight: 600; color: #1a1a2e;"></p>
             <p>We've sent a confirmation email to <strong id="confirmation-email"></strong></p>
            <!-- <p>You'll receive payment instructions shortly.</p> -->
             <div id="game-link" style="margin-top: 20px;"></div>
@@ -841,6 +862,69 @@
                 month: 'long',
                 year: 'numeric'
             });
+        }
+
+        /** Today in the user's local timezone as YYYY-MM-DD (avoids UTC vs local mismatch on mobile date inputs). */
+        function getLocalDateYYYYMMDD() {
+            const n = new Date();
+            const y = n.getFullYear();
+            const m = String(n.getMonth() + 1).padStart(2, '0');
+            const d = String(n.getDate()).padStart(2, '0');
+            return `${y}-${m}-${d}`;
+        }
+
+        function applyDateInputMin() {
+            const dateInput = document.getElementById('date');
+            if (!dateInput) return;
+            const minD = getLocalDateYYYYMMDD();
+            dateInput.setAttribute('min', minD);
+            if (dateInput.value && dateInput.value < minD) {
+                dateInput.value = '';
+            }
+        }
+
+        /** Wake Render free tier early so the first PaymentIntent request is faster (best-effort). */
+        function warmUpPaymentApiServer() {
+            try {
+                const cfg = window.STRIPE_CONFIG;
+                if (!cfg || !cfg.paymentApiUrl) return;
+                const base = cfg.paymentApiUrl.replace(/\/create-payment-intent\/?$/, '');
+                fetch(base + '/health', { mode: 'cors', cache: 'no-store' }).catch(function () {});
+            } catch (e) { /* ignore */ }
+        }
+
+        function scrollFieldIntoViewForBooking(el) {
+            if (!el) return;
+            const run = function () {
+                if (el.id === 'time-hour' || el.id === 'time-minute') {
+                    const hourEl = document.getElementById('time-hour');
+                    const wrap = hourEl && hourEl.closest('.form-group');
+                    if (wrap) wrap.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+                    setTimeout(function () {
+                        try { el.focus({ preventScroll: true }); } catch (err) {}
+                    }, 450);
+                    return;
+                }
+                if (el.classList && el.classList.contains('payment-option')) {
+                    const payWrap = document.querySelector('.payment-options');
+                    if (payWrap) payWrap.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+                    return;
+                }
+                const fg = el.closest && el.closest('.form-group');
+                const target = fg || el;
+                target.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+                setTimeout(function () {
+                    try {
+                        if (el.tagName === 'INPUT' || el.tagName === 'SELECT' || el.tagName === 'TEXTAREA') {
+                            el.focus({ preventScroll: true });
+                        }
+                    } catch (err) {}
+                }, 450);
+            };
+            run();
+            if (window.innerWidth < 900) {
+                setTimeout(run, 120);
+            }
         }
 
         // Load available hours based on selected date and existing bookings
@@ -1119,13 +1203,18 @@
             }
         }
 
-        // Set minimum date to today
+        // Set minimum date to today (local timezone — important for mobile)
         document.addEventListener('DOMContentLoaded', function() {
             const dateInput = document.getElementById('date');
             const hourSelect = document.getElementById('time-hour');
             const minuteSelect = document.getElementById('time-minute');
-            const today = new Date().toISOString().split('T')[0];
-            dateInput.setAttribute('min', today);
+            applyDateInputMin();
+            dateInput.addEventListener('focus', applyDateInputMin);
+            dateInput.addEventListener('click', applyDateInputMin);
+            document.addEventListener('visibilitychange', function () {
+                if (document.visibilityState === 'visible') applyDateInputMin();
+            });
+            warmUpPaymentApiServer();
             
             // Initialize Firebase - ensure both are initialized
             initializeFirebase();
@@ -1228,8 +1317,7 @@
                 </ul>
             `;
             
-            // Scroll to error container
-            errorContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            errorContainer.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
         }
 
         // Handle form submission
@@ -1361,6 +1449,9 @@
                     opt.style.backgroundColor = 'rgba(233, 69, 96, 0.05)';
                     if (!firstErrorField) firstErrorField = opt;
                 });
+                if (!firstErrorField) {
+                    firstErrorField = document.querySelector('.payment-option');
+                }
                 const pe = document.getElementById('payment-error');
                 if (pe) pe.textContent = 'Please choose how you would like to pay';
                 const payGroup = document.getElementById('payment-error')?.closest('.form-group');
@@ -1380,31 +1471,12 @@
                 console.log('First error field:', firstErrorField);
                 showFormErrors(errors);
                 
-                // Scroll to first error field
                 if (firstErrorField) {
-                    console.log('Scrolling to first error field:', firstErrorField.id || firstErrorField.className);
-                    // For time fields, scroll to the time container
-                    if (firstErrorField.id === 'time-hour' || firstErrorField.id === 'time-minute') {
-                        const timeContainer = document.getElementById('time-hour').closest('.form-group');
-                        if (timeContainer) {
-                            timeContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        }
-                    } else {
-                        firstErrorField.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    }
-                    
-                    // Focus the field if it's an input
-                    if (firstErrorField.tagName === 'INPUT' || firstErrorField.tagName === 'SELECT' || firstErrorField.tagName === 'TEXTAREA') {
-                        setTimeout(() => {
-                            firstErrorField.focus();
-                            console.log('Focused on error field');
-                        }, 300);
-                    }
+                    scrollFieldIntoViewForBooking(firstErrorField);
                 } else {
-                    // Fallback: scroll to error container
                     const errorContainer = document.getElementById('form-errors');
                     if (errorContainer) {
-                        errorContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        errorContainer.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
                     }
                 }
                 return;
@@ -1453,6 +1525,7 @@
                 const bookingId = bookingRef.id;
                 console.log('[Booking] Booking document created, id:', bookingId);
 
+                submitBtn.textContent = 'Connecting to payment… (first load can take ~30s if the server was asleep)';
                 let clientSecret;
                 try {
                     console.log('[Booking] Step 3: Requesting PaymentIntent from payment server…');
@@ -1547,13 +1620,23 @@
                     }
                 }
                 
-                // Show success first (behind the payment overlay), then dismiss overlay — avoids a flash of the booking form
+                // Dismiss payment overlay before showing success (processing modal must not stay on top)
+                if (window.BookingStripePayment && typeof window.BookingStripePayment.hideModal === 'function') {
+                    window.BookingStripePayment.hideModal();
+                }
+                var payOverlayEl = document.getElementById('booking-payment-modal-overlay');
+                if (payOverlayEl) payOverlayEl.classList.add('payment-overlay-hidden');
+
                 const introEl = document.getElementById('booking-intro');
                 const formEl = document.getElementById('booking-form');
                 if (introEl) introEl.style.display = 'none';
                 if (formEl) formEl.style.display = 'none';
                 document.getElementById('booking-success').classList.add('show');
                 document.getElementById('confirmation-email').textContent = formData.email;
+                const slotSummaryEl = document.getElementById('booking-slot-summary');
+                if (slotSummaryEl && formData.date && formData.time) {
+                    slotSummaryEl.textContent = 'Your booking: ' + formatSlotDateForPaymentSummary(formData.date) + ' at ' + formData.time + ' (UK time)';
+                }
                 
                 const gameLink = `${window.location.origin}${window.location.pathname.replace('booking.html', 'game.html')}?bookingId=${bookingId}`;
                 const gameLinkElement = document.getElementById('game-link');
@@ -1569,15 +1652,24 @@
                     `;
                 }
                 
-                if (window.BookingStripePayment && typeof window.BookingStripePayment.hideModal === 'function') {
-                    window.BookingStripePayment.hideModal();
-                }
+                requestAnimationFrame(function () {
+                    if (window.BookingStripePayment && typeof window.BookingStripePayment.hideModal === 'function') {
+                        window.BookingStripePayment.hideModal();
+                    }
+                    var po2 = document.getElementById('booking-payment-modal-overlay');
+                    if (po2) po2.classList.add('payment-overlay-hidden');
+                });
                 const successEl = document.getElementById('booking-success');
                 if (successEl) successEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 
             } catch (error) {
                 console.error('[Booking] FAILED at some step — full error:', error);
                 if (error && error.stack) console.error('[Booking] Stack:', error.stack);
+                if (window.BookingStripePayment && typeof window.BookingStripePayment.hideModal === 'function') {
+                    window.BookingStripePayment.hideModal();
+                }
+                var poErr = document.getElementById('booking-payment-modal-overlay');
+                if (poErr) poErr.classList.add('payment-overlay-hidden');
                 var msg = error && error.message ? error.message : String(error);
                 alert(msg.indexOf('Stripe is not fully configured') !== -1 || msg.indexOf('stripe-config') !== -1
                     ? msg
@@ -1601,6 +1693,18 @@
         }
         })(); // End IIFE
         
+        /** EmailJS template variables: booking_date_iso, booking_time, booking_date_display, booking_datetime_line */
+        function formatBookingDateForEmail(isoDate) {
+            if (!isoDate) return '';
+            var d = new Date(isoDate + 'T12:00:00');
+            return d.toLocaleDateString('en-GB', {
+                weekday: 'long',
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            });
+        }
+
         // Function to send game link email to recipient (outside IIFE)
         async function sendGameLinkEmail(recipientEmail, gameLink, formData) {
             try {
@@ -1635,7 +1739,7 @@
                     const numPlayers = parseInt(formData.players) || 1;
                     
                     // Build forwarding instructions text
-                    const forwardingInstructions = `\n\n📧 IMPORTANT: Please forward this email to everyone who will be playing the game.\n\n📱 Number of Screens: You can open this game link on up to ${numPlayers} screen(s) based on the number of participants you booked. If you try to open the game on more screens than the number of participants, you may experience glitches or errors.\n\n💡 Tip: Each player should use the same game link, but only ${numPlayers} screen(s) can be active at the same time.`;
+                    const forwardingInstructions = `\n\n 📧 IMPORTANT: Please forward this email to everyone who will be playing the game.\n\n📱 Number of Screens: You can open this game link on up to ${numPlayers} screen(s) based on the number of participants you booked. If you try to open the game on more screens than the number of participants, you may experience glitches or errors.\n\n💡 Tip: Each player should use the same game link, but only ${numPlayers} screen(s) can be active at the same time.`;
                     
                     // Build personal message section if provided
                     let personalMessageSection = '';
@@ -1646,14 +1750,25 @@
                     // Template parameters - only include variables that exist in your EmailJS template
                     // Based on your template, it has: {{subject}}, {{game_link}}, {{from_name}}, {{to_email}}, {{from_email}}
                     // NOTE: To include personal message and forwarding instructions, add {{personal_message}} and {{forwarding_instructions}} to your EmailJS template
+                    var bookingDateDisplay = formatBookingDateForEmail(formData.date);
+                    var bookingTime = formData.time || '';
+                    var bookingDatetimeLine =
+                        formData.date && bookingTime
+                            ? bookingDateDisplay + ' at ' + bookingTime + ' (UK time)'
+                            : '';
+
                     const templateParams = {
                         to_email: recipientEmail,
                         from_email: 'meghana.shettigar@gmail.com',
                         from_name: fromName,
-                        subject: 'Your Treasure Hunt Game Link!',
+                        subject: 'Your game link from Letter Left Behind!',
                         game_link: gameLink,
                         forwarding_instructions: forwardingInstructions,
-                        num_players: numPlayers.toString()
+                        num_players: numPlayers.toString(),
+                        booking_date_iso: formData.date || '',
+                        booking_time: bookingTime,
+                        booking_date_display: bookingDateDisplay,
+                        booking_datetime_line: bookingDatetimeLine
                     };
                     
                     // Add personal_message if template supports it (uncomment after adding {{personal_message}} to template)

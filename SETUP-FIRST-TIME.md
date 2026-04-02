@@ -205,7 +205,18 @@ If you do not see **Domains**, your integration may not require it; test payment
 2. Open **Email Services** / **Account** / **Security** (wording varies by version).
 3. If there is an **Allowed origins** or **Domains** list, add **`https://letterleftbehind.com`**.
 
-If your templates work without this, you can skip.
+**Template variables** the site sends (use `{{variable_name}}` in your EmailJS template):
+
+| Variable | Example | Meaning |
+|----------|---------|---------|
+| `booking_date_iso` | `2026-03-30` | Date (YYYY-MM-DD) |
+| `booking_time` | `14:00` | Time (24h, UK) |
+| `booking_date_display` | `Monday, 30 March 2026` | Long UK date |
+| `booking_datetime_line` | `Monday, 30 March 2026 at 14:00 (UK time)` | One line for the email body |
+| `game_link` | `https://…` | Game URL |
+| `num_players` | `2` | Number of players |
+
+If your templates work without domain allowlisting, you can skip step 3.
 
 ---
 
