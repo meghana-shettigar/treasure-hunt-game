@@ -1,6 +1,9 @@
 // Firebase Configuration
 // IMPORTANT: Replace these with your own Firebase project credentials
 // Get your config from: https://console.firebase.google.com/
+//
+// Authorized domains (Firebase Console → Authentication → Settings → Authorized domains):
+//   Add letterleftbehind.com and www.letterleftbehind.com when using the live site (same test project is fine).
 
 // This will be loaded as a global variable
 var firebaseConfig = {

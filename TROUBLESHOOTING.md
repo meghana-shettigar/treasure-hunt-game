@@ -102,3 +102,7 @@ console.log('Form errors div found:', !!formErrors);
 ```
 
 If these return `false` or `0`, there's an issue with the HTML structure.
+
+## Live domain (letterleftbehind.com)
+
+If booking or payments fail only on the public site, see **`DOMAIN-SETUP.md`** (Stripe API URL, `CLIENT_ORIGIN` / CORS, Firebase authorized domains).

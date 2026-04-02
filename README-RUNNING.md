@@ -1,5 +1,7 @@
 # How to Run the Treasure Hunt Game Locally
 
+**Production:** https://letterleftbehind.com — see `DOMAIN-SETUP.md` for Stripe API, Firebase authorized domains, and DNS.
+
 ## Quick Start (Easiest Method)
 
 ### Option 1: Direct File Opening
@@ -21,7 +23,7 @@
    ```bash
    ./start-server.sh
    ```
-4. Open your browser and go to: `http://localhost:8000`
+4. Open your browser — local dev: `http://localhost:8000` · production: `https://letterleftbehind.com`
 5. Press `Ctrl+C` in Terminal to stop the server when done
 
 #### Using Python Manually
@@ -34,7 +36,7 @@
    ```bash
    python3 -m http.server 8000
    ```
-4. Open your browser and visit: `http://localhost:8000`
+4. Open your browser — local dev: `http://localhost:8000` · production: `https://letterleftbehind.com`
 5. Press `Ctrl+C` to stop the server
 
 #### Using Node.js (if you have it installed)
@@ -50,7 +52,7 @@
    ```bash
    http-server -p 8000
    ```
-4. Open browser: `http://localhost:8000`
+4. Open browser — local dev: `http://localhost:8000` · production: `https://letterleftbehind.com`
 
 #### Using VS Code (if you use VS Code)
 1. Install "Live Server" extension in VS Code
@@ -65,7 +67,7 @@ If port 8000 is already in use, use a different port:
 ```bash
 python3 -m http.server 8080
 ```
-Then access at: `http://localhost:8080`
+Then access at: `http://localhost:8080` (local dev; production: `https://letterleftbehind.com`)
 
 ### Images or Resources Not Loading
 - Make sure you're using a local server (Option 2), not opening the file directly
@@ -89,9 +91,6 @@ treasure-hunt-game/
 ```
 
 ## Next Steps After Testing Locally
-Once you're happy with the game locally, you can:
-1. Deploy to GitHub Pages (free hosting)
-2. Deploy to Netlify or Vercel (free hosting)
-3. Use any web hosting service
+The public site is **https://letterleftbehind.com** (GitHub Pages + custom domain). For Stripe payments you must also deploy `server/stripe-server.js` and configure DNS/env — see **`DOMAIN-SETUP.md`**.
 
 Happy hunting! 🎯

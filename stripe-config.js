@@ -4,16 +4,18 @@
  * 1) publishableKey — Stripe Dashboard → Developers → API keys → Publishable key (pk_test_... or pk_live_...)
  *
  * 2) paymentApiUrl — The address of the small Node server in this repo (server/stripe-server.js).
- *    It is NOT your Git URL. Git stores code; it does not run an HTTP API.
- *    For local testing with the booking page at http://localhost:8000/booking.html, run the
- *    payment server on port 3001 and use the URL below.
- *    When you deploy the site, deploy the same server (e.g. Render) and set paymentApiUrl to
- *    https://your-api-hostname/create-payment-intent
+ *    Deploy that server (HTTPS), then point this URL at it (e.g. api subdomain or Render/Railway URL).
+ *    Stripe Dashboard → Developers → Domains: add https://letterleftbehind.com for Payment Element.
+ *
+ * Local dev (commented — uncomment to test booking + payment on your machine):
+ *    // paymentApiUrl: 'http://localhost:3001/create-payment-intent',
+ *    Run: cd server && npm start, and open the site over http://localhost (see README-RUNNING.md).
  */
 window.STRIPE_CONFIG = {
     publishableKey: 'pk_test_51TG48974iMyJCSI5HZaz8Xb4CPtu10NGNLxslMZeyvG4N1jMD6VzHUzG67gF1YnVE4NNh43zD5JADQZif5cPzTKy00teqRBmIT',
-    /** Local payment API (run: cd server && npm start). Change to your live API URL in production. */
-    paymentApiUrl: 'http://localhost:3001/create-payment-intent',
+    /** Production: HTTPS API (deploy server/stripe-server.js; see DOMAIN-SETUP.md). Still using Stripe test keys until you switch to live. */
+   // paymentApiUrl: 'https://api.letterleftbehind.com/create-payment-intent',
+    paymentApiUrl: 'https://letterleftbehind-stripe-api.onrender.com/create-payment-intent',
     pricePerPlayerPence: 1200,
     currency: 'gbp',
 };
@@ -67,7 +69,7 @@ window.createStripePaymentIntent = function (amountPence, bookingId, email) {
             console.error('[Stripe API] URL was:', cfg.paymentApiUrl);
             if (err && err.message === 'Failed to fetch') {
                 console.error(
-                    '[Stripe API] "Failed to fetch" usually means: server not running (cd server && npm start), wrong URL, CORS, or HTTPS page blocking http://localhost (use http for both or deploy API with HTTPS).'
+                    '[Stripe API] "Failed to fetch" usually means: payment API URL wrong or unreachable, CORS misconfigured on server/stripe-server.js (set CLIENT_ORIGIN), or (local only) HTTPS page blocking http://localhost — use HTTP for both or deploy API with HTTPS. See DOMAIN-SETUP.md.'
                 );
             }
             throw err;

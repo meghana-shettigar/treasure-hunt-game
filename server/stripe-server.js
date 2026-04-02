@@ -26,8 +26,9 @@ const app = express();
 const port = process.env.PORT || 3001;
 
 // CORS: if CLIENT_ORIGIN is unset or still the .env.example placeholder, reflect the browser's
-// Origin (works for http://localhost:8000 → API on :3001). If you set CLIENT_ORIGIN to your real
-// production URL, only that origin is allowed.
+// Origin (works for http://localhost:8000 → API on :3001). For production set e.g.
+// CLIENT_ORIGIN=https://letterleftbehind.com,https://www.letterleftbehind.com
+// (comma-separated for apex + www).
 var clientOriginEnv = process.env.CLIENT_ORIGIN;
 var isPlaceholder =
     !clientOriginEnv || clientOriginEnv === 'https://your-production-domain.com';
@@ -37,7 +38,16 @@ if (isPlaceholder) {
 } else if (clientOriginEnv === '*') {
     corsOptions = { origin: '*', methods: ['POST', 'OPTIONS', 'GET'] };
 } else {
-    corsOptions = { origin: clientOriginEnv, methods: ['POST', 'OPTIONS', 'GET'] };
+    var originParts = clientOriginEnv
+        .split(',')
+        .map(function (s) {
+            return s.trim();
+        })
+        .filter(Boolean);
+    corsOptions = {
+        origin: originParts.length === 1 ? originParts[0] : originParts,
+        methods: ['POST', 'OPTIONS', 'GET'],
+    };
 }
 app.use(cors(corsOptions));
 app.use(express.json({ limit: '32kb' }));
@@ -80,7 +90,7 @@ app.post('/create-payment-intent', async function (req, res) {
 app.listen(port, function () {
     console.log('Stripe payment API listening on port ' + port);
     if (isPlaceholder) {
-        console.log('CORS: allowing any requesting origin (dev / placeholder CLIENT_ORIGIN). For production, set CLIENT_ORIGIN=https://your-real-site.com');
+        console.log('CORS: allowing any requesting origin (dev / placeholder CLIENT_ORIGIN). For production, set CLIENT_ORIGIN=https://letterleftbehind.com,https://www.letterleftbehind.com');
     } else {
         console.log('CORS: CLIENT_ORIGIN=' + clientOriginEnv);
     }
