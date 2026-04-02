@@ -815,6 +815,8 @@
             // Use localDb to avoid conflict with database.js which also declares 'db'
             let localDb = null;
             let isInitialized = false;
+            /** Tracks { key, message } for bottom error list; cleared when user fixes each field */
+            let activeValidationErrors = [];
 
         // Initialize Firebase
         function initializeFirebase() {
@@ -1298,26 +1300,108 @@
             }
         });
 
-        // Show form errors in centralized location
-        function showFormErrors(errors) {
+        // Show form errors in centralized location (errorItems: { key, message }[])
+        // opts.scroll: only true on failed submit — do not scroll when user edits (removeValidationErrorByKey).
+        function showFormErrors(errorItems, opts) {
             const errorContainer = document.getElementById('form-errors');
             if (!errorContainer) return;
-            
-            if (errors.length === 0) {
+
+            opts = opts || {};
+            var shouldScrollToList = opts.scroll === true;
+
+            activeValidationErrors = Array.isArray(errorItems) ? errorItems.slice() : [];
+
+            if (activeValidationErrors.length === 0) {
                 errorContainer.style.display = 'none';
                 errorContainer.innerHTML = '';
                 return;
             }
-            
+
             errorContainer.style.display = 'block';
-            errorContainer.innerHTML = `
-                <strong style="display: block; margin-bottom: 10px;">⚠️ Please fix the following errors:</strong>
-                <ul>
-                    ${errors.map(error => `<li>${error}</li>`).join('')}
-                </ul>
-            `;
-            
-            errorContainer.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+            errorContainer.innerHTML =
+                '<strong style="display: block; margin-bottom: 10px;">⚠️ Please fix the following errors:</strong><ul>' +
+                activeValidationErrors.map(function (e) { return '<li>' + e.message + '</li>'; }).join('') +
+                '</ul>';
+
+            if (shouldScrollToList) {
+                errorContainer.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+            }
+        }
+
+        function clearFieldVisualForKey(key) {
+            if (key === 'payment') {
+                document.querySelectorAll('.payment-option').forEach(function (opt) {
+                    opt.style.borderColor = '';
+                    opt.style.borderWidth = '';
+                    opt.style.backgroundColor = '';
+                });
+                var pe = document.getElementById('payment-error');
+                if (pe) pe.textContent = '';
+                var payGroup = pe && pe.closest('.form-group');
+                if (payGroup) payGroup.classList.remove('error');
+                return;
+            }
+            if (key === 'time') {
+                ['time-hour', 'time-minute'].forEach(function (id) {
+                    var el = document.getElementById(id);
+                    if (el) {
+                        el.style.borderColor = '';
+                        el.style.borderWidth = '';
+                        el.style.backgroundColor = '';
+                    }
+                });
+                var timeHidden = document.getElementById('time');
+                if (timeHidden) {
+                    var fg = timeHidden.closest('.form-group');
+                    if (fg) {
+                        fg.classList.remove('error');
+                        var te = document.getElementById('time-error');
+                        if (te) te.textContent = '';
+                    }
+                }
+                return;
+            }
+            var field = document.getElementById(key);
+            if (field) {
+                field.style.borderColor = '';
+                field.style.borderWidth = '';
+                field.style.backgroundColor = '';
+                var formGroup = field.closest('.form-group');
+                if (formGroup) {
+                    formGroup.classList.remove('error');
+                    var errDiv = formGroup.querySelector('.error-message');
+                    if (errDiv) errDiv.textContent = '';
+                }
+            }
+        }
+
+        function getValidationKeyFromElement(el) {
+            if (!el) return null;
+            if (el.name === 'payment') return 'payment';
+            if (!el.id) return null;
+            if (el.id === 'time-hour' || el.id === 'time-minute') return 'time';
+            return el.id;
+        }
+
+        function removeValidationErrorByKey(key) {
+            activeValidationErrors = activeValidationErrors.filter(function (e) { return e.key !== key; });
+            showFormErrors(activeValidationErrors, { scroll: false });
+        }
+
+        function onBookingFieldFixed(e) {
+            var t = e.target;
+            var form = document.getElementById('booking-form');
+            if (!t || !form || !form.contains(t)) return;
+            var key = getValidationKeyFromElement(t);
+            if (!key) return;
+            clearFieldVisualForKey(key);
+            removeValidationErrorByKey(key);
+        }
+
+        var bookingFormEl = document.getElementById('booking-form');
+        if (bookingFormEl) {
+            bookingFormEl.addEventListener('input', onBookingFieldFixed);
+            bookingFormEl.addEventListener('change', onBookingFieldFixed);
         }
 
         // Handle form submission
@@ -1372,7 +1456,7 @@
             
             // Validation with field highlighting and scrolling
             let isValid = true;
-            const errors = [];
+            const fieldErrors = [];
             let firstErrorField = null;
             
             // Helper to highlight field in red and track first error
@@ -1391,25 +1475,25 @@
             
             if (!formData.email || !formData.email.includes('@')) {
                 markFieldError('email', 'Please enter a valid email address');
-                errors.push('Your email address is required');
+                fieldErrors.push({ key: 'email', message: 'Your email address is required' });
                 isValid = false;
             }
             
             if (!formData.name || formData.name.length < 2) {
                 markFieldError('name', 'Please enter your full name');
-                errors.push('Full name is required (at least 2 characters)');
+                fieldErrors.push({ key: 'name', message: 'Full name is required (at least 2 characters)' });
                 isValid = false;
             }
             
             if (!formData.phone || formData.phone.length < 5) {
                 markFieldError('phone', 'Please enter a valid contact number');
-                errors.push('Contact number is required');
+                fieldErrors.push({ key: 'phone', message: 'Contact number is required' });
                 isValid = false;
             }
             
             if (!formData.date) {
                 markFieldError('date', 'Please select a date');
-                errors.push('Please select a date for your booking');
+                fieldErrors.push({ key: 'date', message: 'Please select a date for your booking' });
                 isValid = false;
             }
             
@@ -1430,13 +1514,13 @@
                     if (!firstErrorField) firstErrorField = minuteField;
                 }
                 showError('time', 'Please select both hour and minute');
-                errors.push('Please select both hour and minute for your booking time');
+                fieldErrors.push({ key: 'time', message: 'Please select both hour and minute for your booking time' });
                 isValid = false;
             }
             
             if (!formData.players || parseInt(formData.players) < 1) {
                 markFieldError('players', 'Please enter a valid number of players (minimum 1)');
-                errors.push('Please enter the number of players (minimum 1)');
+                fieldErrors.push({ key: 'players', message: 'Please enter the number of players (minimum 1)' });
                 isValid = false;
             }
             
@@ -1456,28 +1540,23 @@
                 if (pe) pe.textContent = 'Please choose how you would like to pay';
                 const payGroup = document.getElementById('payment-error')?.closest('.form-group');
                 if (payGroup) payGroup.classList.add('error');
-                errors.push('Please select a payment method');
+                fieldErrors.push({ key: 'payment', message: 'Please select a payment method' });
                 isValid = false;
             }
             
             if (document.getElementById('referral') && !formData.referral) {
                 markFieldError('referral', 'Please tell us how you found us');
-                errors.push('Please tell us how you found us');
+                fieldErrors.push({ key: 'referral', message: 'Please tell us how you found us' });
                 isValid = false;
             }
             
             if (!isValid) {
-                console.log('Validation failed with', errors.length, 'errors:', errors);
+                console.log('Validation failed with', fieldErrors.length, 'errors:', fieldErrors);
                 console.log('First error field:', firstErrorField);
-                showFormErrors(errors);
+                showFormErrors(fieldErrors, { scroll: true });
                 
                 if (firstErrorField) {
                     scrollFieldIntoViewForBooking(firstErrorField);
-                } else {
-                    const errorContainer = document.getElementById('form-errors');
-                    if (errorContainer) {
-                        errorContainer.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
-                    }
                 }
                 return;
             }
@@ -1525,7 +1604,7 @@
                 const bookingId = bookingRef.id;
                 console.log('[Booking] Booking document created, id:', bookingId);
 
-                submitBtn.textContent = 'Connecting to payment… (first load can take ~30s if the server was asleep)';
+                submitBtn.textContent = 'Connecting to payment…';
                 let clientSecret;
                 try {
                     console.log('[Booking] Step 3: Requesting PaymentIntent from payment server…');
