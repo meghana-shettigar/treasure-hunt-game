@@ -929,6 +929,24 @@
             }
         }
 
+        /** Canonical www origin for shared links (matches site SEO); localhost/file:// unchanged. */
+        function getPublicSiteOrigin() {
+            var h = (window.location.hostname || '').toLowerCase();
+            if (h === 'letterleftbehind.com' || h === 'www.letterleftbehind.com') {
+                return 'https://www.letterleftbehind.com';
+            }
+            return window.location.origin;
+        }
+
+        function buildGamePageUrlForBooking(bookingId) {
+            var path = window.location.pathname || '/';
+            path = path.replace(/booking\.html$/i, 'game.html');
+            if (path.indexOf('game.html') === -1) {
+                path = '/game.html';
+            }
+            return getPublicSiteOrigin() + path + '?bookingId=' + encodeURIComponent(bookingId);
+        }
+
         // Load available hours based on selected date and existing bookings
         async function loadAvailableTimeSlots(selectedDate) {
             if (!selectedDate) {
@@ -1676,7 +1694,7 @@
                         const sessionId = await window.DatabaseService.createGameSessionFromBooking(bookingId, formDataPaid);
                         if (sessionId) {
                             console.log('Game session created:', sessionId);
-                            const gameLink = `${window.location.origin}${window.location.pathname.replace('booking.html', 'game.html')}?bookingId=${bookingId}`;
+                            const gameLink = buildGamePageUrlForBooking(bookingId);
                             // Store game link in booking document for easy access
                             await dbRef.collection('bookings').doc(bookingId).update({
                                 gameSessionId: sessionId,
@@ -1717,7 +1735,7 @@
                     slotSummaryEl.textContent = 'Your booking: ' + formatSlotDateForPaymentSummary(formData.date) + ' at ' + formData.time + ' (UK time)';
                 }
                 
-                const gameLink = `${window.location.origin}${window.location.pathname.replace('booking.html', 'game.html')}?bookingId=${bookingId}`;
+                const gameLink = buildGamePageUrlForBooking(bookingId);
                 const gameLinkElement = document.getElementById('game-link');
                 if (gameLinkElement) {
                     gameLinkElement.innerHTML = `

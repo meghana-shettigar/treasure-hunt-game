@@ -24,7 +24,10 @@
             text-decoration: none;
             transition: background 0.25s, color 0.25s;
         }
-        .landing-banner-logo img { height: 50px; width: auto; display: block; }
+        .landing-banner-logo .logo-img { height: 50px; width: auto; display: block; }
+        .landing-banner-logo .logo-img-hover { display: none; }
+        .landing-banner-logo:hover .logo-img-default { display: none; }
+        .landing-banner-logo:hover .logo-img-hover { display: block; }
         /* Logo link is the <a> itself (same yellow hover as nav) */
         .landing-banner-logo:hover {
             background: #ffd700;
@@ -121,7 +124,8 @@
 <body>
     <div class="landing-banner">
         <a href="index.html" class="landing-banner-logo">
-            <img src="images/logo.png" alt="Letter Left Behind" onerror="this.style.display='none'">
+            <img class="logo-img logo-img-default" src="images/logo.png" alt="Letter Left Behind" onerror="this.style.display='none'">
+            <img class="logo-img logo-img-hover" src="images/invert-logo.png" alt="" aria-hidden="true">
         </a>
         <div class="landing-nav-wrapper">
             <button class="hamburger-btn" id="hamburger-btn" aria-label="Open menu" aria-expanded="false">

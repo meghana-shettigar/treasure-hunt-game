@@ -1173,6 +1173,24 @@
             }
         }
 
+        /** Canonical www origin for shared links; localhost unchanged. */
+        function getPublicSiteOrigin() {
+            const h = (window.location.hostname || '').toLowerCase();
+            if (h === 'letterleftbehind.com' || h === 'www.letterleftbehind.com') {
+                return 'https://www.letterleftbehind.com';
+            }
+            return window.location.origin;
+        }
+
+        function buildGamePageUrlForAdminBooking(bookingId) {
+            let path = window.location.pathname || '/';
+            path = path.replace(/admin-dashboard\.html$/i, 'game.html');
+            if (path.indexOf('game.html') === -1) {
+                path = '/game.html';
+            }
+            return getPublicSiteOrigin() + path + '?bookingId=' + encodeURIComponent(bookingId);
+        }
+
         // Generate/Copy game link for a booking
         async function generateGameLink(bookingId) {
             if (!localDb) {
@@ -1206,9 +1224,8 @@
                     }
                 }
 
-                // Generate game link
-                const baseUrl = window.location.origin + window.location.pathname.replace('admin-dashboard.html', 'game.html');
-                const gameLink = `${baseUrl}?bookingId=${bookingId}`;
+                // Generate game link (www.letterleftbehind.com on production)
+                const gameLink = buildGamePageUrlForAdminBooking(bookingId);
 
                 // Copy to clipboard
                 try {
