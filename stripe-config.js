@@ -1,24 +1,35 @@
 /**
  * Stripe client configuration (safe to load in the browser).
  *
- * 1) publishableKey — Stripe Dashboard → Developers → API keys → Publishable key (pk_test_... or pk_live_...)
+ * 1) publishableKey — Stripe Dashboard → Developers → API keys → Publishable key
+ *    Use pk_live_... for production (toggle "Viewing test data" OFF). Use pk_test_... for test mode.
  *
- * 2) paymentApiUrl — The address of the small Node server in this repo (server/stripe-server.js).
- *    Deploy that server (HTTPS), then point this URL at it (e.g. api subdomain or Render/Railway URL).
- *    Stripe Dashboard → Developers → Domains: add https://letterleftbehind.com for Payment Element.
+ * 2) paymentApiUrl — HTTPS URL of server/stripe-server.js (e.g. Render). Must use the same Stripe mode
+ *    as publishableKey (live key + server sk_live, or test key + server sk_test).
  *
- * Local dev (commented — uncomment to test booking + payment on your machine):
- *    // paymentApiUrl: 'http://localhost:3001/create-payment-intent',
- *    Run: cd server && npm start, and open the site over http://localhost (see README-RUNNING.md).
+ * Stripe Dashboard → Settings → Payment method domains: add https://letterleftbehind.com (and www if used).
+ *
+ * Local dev (see README-RUNNING.md):
+ *   // paymentApiUrl: 'http://localhost:3001/create-payment-intent',
  */
 window.STRIPE_CONFIG = {
-    publishableKey: 'pk_test_51TG48974iMyJCSI5HZaz8Xb4CPtu10NGNLxslMZeyvG4N1jMD6VzHUzG67gF1YnVE4NNh43zD5JADQZif5cPzTKy00teqRBmIT',
-    /** Production: HTTPS API (deploy server/stripe-server.js; see DOMAIN-SETUP.md). Still using Stripe test keys until you switch to live. */
-   // paymentApiUrl: 'https://api.letterleftbehind.com/create-payment-intent',
+    // --- Production (active): replace pk_live_... with your live Publishable key from Stripe Dashboard ---
+    publishableKey: 'pk_live_51TG48974iMyJCSI5Xoq4N6uRCylg2dx8ehox0jBarg3eTxM6gxYTIABw0Jztt0BzI19IEmzjlTRoL8ahPx0bbgTI002irrJsSY',
+
+    /** Deployed PaymentIntent API (HTTPS). Same service as test; server env must use sk_live for production. */
     paymentApiUrl: 'https://letterleftbehind-stripe-api.onrender.com/create-payment-intent',
+
     pricePerPlayerPence: 1200,
     currency: 'gbp',
 };
+
+// --- TEST / Stripe test mode (use for future test/staging deployment) ---
+// window.STRIPE_CONFIG = {
+//     publishableKey: 'pk_test_51TG48974iMyJCSI5HZaz8Xb4CPtu10NGNLxslMZeyvG4N1jMD6VzHUzG67gF1YnVE4NNh43zD5JADQZif5cPzTKy00teqRBmIT',
+//     paymentApiUrl: 'https://letterleftbehind-stripe-api.onrender.com/create-payment-intent',
+//     pricePerPlayerPence: 1200,
+//     currency: 'gbp',
+// };
 
 /**
  * Calls your server to create a PaymentIntent (requires secret key on server only).

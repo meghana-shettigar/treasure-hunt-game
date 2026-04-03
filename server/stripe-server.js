@@ -4,10 +4,11 @@
  * Local setup:
  *   cd server && npm install
  *   cp .env.example .env
- *   Edit .env and set STRIPE_SECRET_KEY=sk_test_... (from Stripe Dashboard → Developers → API keys)
+ *   Edit .env: STRIPE_SECRET_KEY=sk_test_... or sk_live_... (must match Stripe mode in stripe-config.js publishableKey)
+ *   For production on Render: set STRIPE_SECRET_KEY to sk_live_... and CLIENT_ORIGIN to your site origins.
  *   npm start
  *
- * Deploy: Railway, Render, Fly.io, etc. Set STRIPE_SECRET_KEY in the host env UI (never commit .env).
+ * Deploy: Railway, Render, Fly.io, etc. Set STRIPE_SECRET_KEY and CLIENT_ORIGIN in the host env (never commit .env).
  */
 
 require('dotenv').config();

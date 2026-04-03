@@ -2,6 +2,23 @@
 
 This guide will help you set up Firebase Firestore for the Treasure Hunt game database.
 
+## Production: clean database vs test (two projects)
+
+For **real customers**, create a **separate Firebase project** (or use a dedicated production project) so Firestore starts **empty**—no test bookings, sessions, or feedback. Configure it **the same way** as test: enable Firestore in the same region you want long-term, then apply the **same security rules** and **composite indexes** described in this guide (same structure, not the same data).
+
+**Where the app connects:** only [`firebase-config.js`](firebase-config.js). The active `var firebaseConfig = { ... }` sets `projectId` for the whole site. These pages all use it (via `database.js` where noted):
+
+| Area | Files |
+|------|--------|
+| Bookings | `booking.html` |
+| Game + saved state | `game.html`, `database.js` |
+| Admin | `admin-dashboard.html` |
+| Feedback stats | `feedback-stats.html` |
+
+After you paste your **production** web config into `firebase-config.js` and deploy, every feature above reads and writes the **new** database. Keep the old test project’s config in the **commented** block in that file for a future staging/test deployment.
+
+You do **not** need to change collection names or JavaScript in other files for a new project—only `firebase-config.js` and the Firebase Console (rules, indexes, authorized domains).
+
 ## Step 1: Create a Firebase Project
 
 1. Go to [Firebase Console](https://console.firebase.google.com/)
