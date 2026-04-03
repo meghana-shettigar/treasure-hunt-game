@@ -227,7 +227,9 @@
                 overlay.style.pointerEvents = '';
                 overlay.setAttribute('aria-hidden', 'false');
 
-                if (method === 'card') {
+                /** Card fields (also used when Google Pay / Apple Pay is not offered by the browser). */
+                function mountCardElements() {
+                    mount.innerHTML = '';
                     titleEl.textContent = 'Pay by card';
                     var elements = stripe.elements({ clientSecret: clientSecret });
                     var baseStyle = {
@@ -239,8 +241,6 @@
                         invalid: { color: '#e94560' },
                     };
 
-                    // Split fields (cardNumber / cardExpiry / cardCvc) so MM/YY and CVC are always
-                    // visible and not collapsed behind Link on one row.
                     var wrap = document.createElement('div');
                     wrap.className = 'stripe-split-card-wrap';
                     mount.appendChild(wrap);
@@ -299,6 +299,10 @@
                                 });
                         };
                     }
+                }
+
+                if (method === 'card') {
+                    mountCardElements();
                     return;
                 }
 
@@ -340,31 +344,23 @@
                         });
                 });
 
-                paymentRequest.canMakePayment().then(function (result) {
-                    if (!result) {
+                paymentRequest.canMakePayment().then(function (prResult) {
+                    console.log('[Stripe UI] canMakePayment', prResult);
+                    // Desktop Chrome often returns a truthy object with googlePay false/undefined if
+                    // Wallet has no card, domain isn't registered for GPay (live), or privacy settings block it.
+                    var walletOk =
+                        prResult &&
+                        ((method === 'google_pay' && prResult.googlePay) ||
+                            (method === 'apple_pay' && prResult.applePay));
+
+                    if (!walletOk) {
                         if (errEl) {
                             errEl.textContent =
                                 method === 'google_pay'
-                                    ? 'Google Pay is not available in this browser. Use Chrome (Android/desktop) or choose Card.'
-                                    : 'Apple Pay is not available in this browser session. Use Safari on iPhone/iPad, or Mac Safari with Wallet set up, or choose Card. In Stripe Dashboard → Settings → Payment methods, add your domain for Apple Pay if you have not already.';
+                                    ? 'Google Pay is not available in this session (no card in Google Wallet, incognito, or live site domain not registered for Google Pay in Stripe). Pay with a card below.'
+                                    : 'Apple Pay is not available here. Pay with a card below, or use Safari on an Apple device and add your domain under Stripe → Settings → Payment methods.';
                         }
-                        if (payBtn) payBtn.style.display = 'none';
-                        return;
-                    }
-                    if (method === 'google_pay' && !result.googlePay) {
-                        if (errEl) {
-                            errEl.textContent =
-                                'Google Pay is not available here. Try Chrome, or choose Card.';
-                        }
-                        if (payBtn) payBtn.style.display = 'none';
-                        return;
-                    }
-                    if (method === 'apple_pay' && !result.applePay) {
-                        if (errEl) {
-                            errEl.textContent =
-                                'Apple Pay cannot start here (browser or domain check). Try Safari on an Apple device, ensure HTTPS, register letterleftbehind.com under Stripe → Settings → Payment method domains, or choose Card.';
-                        }
-                        if (payBtn) payBtn.style.display = 'none';
+                        mountCardElements();
                         return;
                     }
 

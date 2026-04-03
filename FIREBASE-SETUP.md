@@ -100,28 +100,39 @@ service cloud.firestore {
 
 **⚠️ Warning**: These rules allow anyone to read/write your database. This is only for development!
 
-3. For production, use proper security rules (example):
+3. **Production / this app (required):** The site uses **no Firebase Authentication** on the client: booking, game, admin, and feedback all talk to Firestore with the public web config. If your rules **deny** reads on `bookings`, the booking form will fail when loading time slots with:
+
+   `FirebaseError: Missing or insufficient permissions`
+
+   Use rules that allow the collections below (same pattern as a locked-down “open client” app). **Tightening** later would mean adding Firebase Auth, Cloud Functions, or App Check—not `request.auth != null` on writes unless you add sign-in everywhere.
 
 ```javascript
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Allow read/write access to gameSessions
-    match /gameSessions/{sessionId} {
-      allow read, write: if true; // Adjust based on your needs
+    // Booking flow: public read (slot queries) + create/update (checkout)
+    match /bookings/{bookingId} {
+      allow read, create, update: if true;
     }
-    
-    // Allow read access to completedGames for leaderboards
-    // Allow write access only from authenticated sources
+    // Game sessions: create/read/update/delete (e.g. delete when completing)
+    match /gameSessions/{sessionId} {
+      allow read, write: if true;
+    }
+    // Leaderboards + completed runs
     match /completedGames/{gameId} {
-      allow read: if true;
-      allow write: if request.auth != null; // Only authenticated users
+      allow read, create: if true;
+    }
+    // Post-game feedback
+    match /feedback/{feedbackId} {
+      allow read, create: if true;
     }
   }
 }
 ```
 
-4. Click "Publish" to apply the rules
+**Security note:** These rules match how the JavaScript is written today (open client). Anyone could theoretically call your Firestore API if they know your project ID; mitigations for a later phase include App Check, server-side writes, or auth. Do **not** use the old doc example that required `request.auth != null` for `completedGames` writes—the game would stop saving scores.
+
+4. Click **Publish** to apply the rules
 
 ## Step 6: Test the Setup
 
@@ -132,39 +143,44 @@ service cloud.firestore {
    - A `gameSessions` collection with your session data
    - When you complete a game, a `completedGames` collection entry
 
-## Step 7: Create Firestore Indexes (Required for Leaderboards)
+## Step 7: Create Firestore Composite Indexes
 
-Firestore requires composite indexes when you query with both `where` and `orderBy` on different fields. You need to create indexes for the leaderboard queries.
+Firestore needs **composite** indexes when a query combines multiple `where` / `orderBy` fields. Your **production** project should define the same indexes your **test** project has (or you will see errors with links to create them).
 
-### Quick Method (Recommended):
-1. When you click "Solo Leaderboard" or "Group Leaderboard" in the admin dashboard, you'll see an error with a link
-2. **Click the link** in the error message - it will take you directly to Firebase Console
-3. Click **"Create Index"** - Firebase will automatically create the required index
-4. Wait 1-2 minutes for the index to build
-5. Refresh the admin dashboard and try the leaderboard buttons again
+### Why the old doc listed “two” `completedGames` indexes
 
-### Manual Method:
-1. Go to **Firestore Database** > **Indexes** tab in Firebase Console
-2. Click **"Create Index"**
-3. Create these two indexes:
+**Solo** and **Group** leaderboards both run:
 
-   **Index 1: Solo Leaderboard**
-   - Collection ID: `completedGames`
-   - Fields to index:
-     - `playerType` (Ascending)
-     - `calculatedScore` (Descending)
-   - Query scope: Collection
+`where('playerType', '==', …)` + `orderBy('calculatedScore', 'desc')`
 
-   **Index 2: Group Leaderboard**
-   - Collection ID: `completedGames`
-   - Fields to index:
-     - `playerType` (Ascending)
-     - `calculatedScore` (Descending)
-   - Query scope: Collection
+They differ only by the **value** of `playerType` (`'solo'` vs `'group'`). Firestore uses **one** composite index on the **fields** `playerType` + `calculatedScore`. You do **not** need two separate index rows for solo vs group—listing them twice in docs was redundant.
 
-4. Click **"Create"** and wait for indexes to build (1-2 minutes)
+### Quick method (still recommended)
 
-**Note**: Indexes are free and only count toward your Firestore quota when they're building. Once built, they don't consume resources.
+When a query is missing an index, the browser console (or Firebase) shows an error with a **direct link** to create that index. Use those links as you exercise each feature (booking date, admin dashboard sections, leaderboards, feedback page).
+
+### Manual checklist — align prod with what the app queries
+
+Create these in **Firestore Database → Indexes → Composite** (Collection scope = **Collection** unless noted):
+
+| Collection | Fields (order) | Used by |
+|------------|------------------|---------|
+| **`completedGames`** | `playerType` ↑, `calculatedScore` ↓ | Solo & group leaderboards (`database.js`), admin “Solo/Group leaderboard” (`admin-dashboard.html`) |
+| **`bookings`** | `date` ↑, `status` ↑ | Booking form: taken slots per date (`booking.html`) |
+| **`bookings`** | `date` ↑, `time` ↑ | Admin: upcoming / past bookings list (`orderBy` date then time) |
+| **`gameSessions`** | `gameStatus` ↑, `updatedAt` ↓ | Admin: **Active Game Sessions** (active only, sorted by recency) |
+| **`feedback`** | `submittedAt` ↓ | `feedback-stats.html` (`orderBy('submittedAt', 'desc')`) — create if the console asks for it; single-field `orderBy` sometimes works without a manual composite depending on project defaults |
+
+**Notes:**
+
+- Admin **completed games** table (`orderBy('completedAt', 'desc')` only) often uses Firestore’s automatic single-field indexing; add a composite only if Firebase returns an index error for that query.
+- Simple queries like `where('bookingId', '==', id)` on `gameSessions` use automatic single-field indexes—no extra composite row for those.
+
+### Same as test?
+
+Yes: **production should have the same composite indexes as test** for the same app version—otherwise the same screens will fail in prod with “missing index” errors. If test had **four** index rows, they likely correspond to the four distinct composite patterns above (two on **`bookings`**, one on **`completedGames`**, one on **`gameSessions`**, plus **`feedback`** if that query required it). Counts in the console can vary slightly if Firebase merged or auto-created single-field indexes.
+
+**Note**: Indexes are free; only index build time uses extra quota briefly.
 
 ## Step 8: View Data in Tabular Format
 
