@@ -18,7 +18,7 @@ const gameData = {
             locationName: "Clock",
             locationNameVariations: ["waterloo clock", "clock", "the waterloo clock"],
             mapHint: "https://www.google.com/maps/embed?pb=!4v1769363363916!6m8!1m7!1sRMzv-N5FVCOLpPAxGn0opg!2m2!1d51.50322710450521!2d-0.1123464712873058!3f298.3047576250058!4f3.665911227972913!5f0.7820865974627469",
-            question: "Stand where travellers first step inside the station, which is visible if you stand below the Waterloo Clock,\nA mural to celebrate 200 years of rail travel greets you right at the beginning of the journey. \nA child is shown travelling through time,\n\nFrom which place did the child begin their journey?",            
+            question: "Find where the travellers first step inside the station, which is visible if you stand just below the Waterloo Clock.\nA mural is put up to celebrate 200 years of rail travel, greets you right at the beginning of the journey. \nHere, a child is shown travelling through time,\nFrom which place did the child begin their journey?",            
             correctAnswer: "Horsley",
             textHint: "A place name derived from- place of horses",
             titbits: "Waterloo Station is one of London's busiest railway stations, opened in 1848. The station's clock has been a landmark for travellers for over 170 years. The station was named after the Battle of Waterloo and has been featured in numerous films and literature. The mural celebrating 200 years of rail travel depicts scenes from railway history, including a child travelling through time."
