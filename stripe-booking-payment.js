@@ -309,7 +309,11 @@
                 titleEl.textContent =
                     method === 'google_pay' ? 'Pay with Google Pay' : 'Pay with Apple Pay';
 
-                var paymentRequest = stripe.paymentRequest({
+                // Stripe docs: use canMakePayment() !== null to decide whether to show the Payment
+                // Request Button — do not require result.googlePay === true (live vs test can differ;
+                // Link can also make the object truthy without googlePay set). Optionally disable Link
+                // so Chrome can surface Google Pay instead of a Link-only sheet.
+                var prOptions = {
                     country: 'GB',
                     currency: (cfg.currency || 'gbp').toLowerCase(),
                     total: {
@@ -318,7 +322,12 @@
                     },
                     requestPayerName: true,
                     requestPayerEmail: true,
-                });
+                };
+                if (method === 'google_pay') {
+                    prOptions.disableWallets = ['link'];
+                }
+
+                var paymentRequest = stripe.paymentRequest(prOptions);
 
                 paymentRequest.on('paymentmethod', function (ev) {
                     stripe
@@ -346,18 +355,20 @@
 
                 paymentRequest.canMakePayment().then(function (prResult) {
                     console.log('[Stripe UI] canMakePayment', prResult);
-                    // Desktop Chrome often returns a truthy object with googlePay false/undefined if
-                    // Wallet has no card, domain isn't registered for GPay (live), or privacy settings block it.
+                    // Google Pay: Stripe recommends treating any non-null result as eligible for the
+                    // Payment Request Button (the element picks correct branding). Requiring
+                    // prResult.googlePay caused false failures in live Chrome when Link/wallet flags differed.
+                    // Apple Pay: still require applePay so we do not show a misleading PR button on Chrome.
                     var walletOk =
-                        prResult &&
-                        ((method === 'google_pay' && prResult.googlePay) ||
-                            (method === 'apple_pay' && prResult.applePay));
+                        method === 'google_pay'
+                            ? prResult != null
+                            : prResult && prResult.applePay;
 
                     if (!walletOk) {
                         if (errEl) {
                             errEl.textContent =
                                 method === 'google_pay'
-                                    ? 'Google Pay is not available in this session (no card in Google Wallet, incognito, or live site domain not registered for Google Pay in Stripe). Pay with a card below.'
+                                    ? 'Google Pay is not available in this session (try a saved card in Chrome or pay.google.com; avoid incognito; ensure HTTPS). Pay with a card below.'
                                     : 'Apple Pay is not available here. Pay with a card below, or use Safari on an Apple device and add your domain under Stripe → Settings → Payment methods.';
                         }
                         mountCardElements();
