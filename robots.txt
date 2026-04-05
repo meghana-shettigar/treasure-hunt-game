@@ -1,0 +1,10 @@
+# https://www.letterleftbehind.com/robots.txt
+User-agent: *
+Allow: /
+
+# Internal tools — do not index
+Disallow: /admin-dashboard.html
+Disallow: /feedback-stats.html
+Disallow: /admin/
+
+Sitemap: https://www.letterleftbehind.com/sitemap.xml

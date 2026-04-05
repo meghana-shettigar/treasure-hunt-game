@@ -1651,22 +1651,44 @@ function setupRatingButtons() {
     });
 }
 
-// Share results
-function shareResults() {
+// Share results (includes site logo image when Web Share Level 2 supports files; otherwise URL for link previews)
+async function shareResults() {
     const stats = gameEngine.getFinalStats();
     const shareText = `I completed the Letter Left Behind treasure hunt!\n\nTime: ${stats.time}\nScore: ${stats.score} points\n\nCan you beat my time?`;
-    
+    const shareTitle = 'Letter Left Behind - Treasure Hunt';
+    const shareUrl = 'https://www.letterleftbehind.com/game.html';
+
     if (navigator.share) {
-        navigator.share({
-            title: 'Letter Left Behind - Treasure Hunt',
-            text: shareText
-        }).catch(err => console.log('Error sharing:', err));
+        try {
+            const faviconUrl = new URL('images/favicon.png', window.location.origin).href;
+            const faviconRes = await fetch(faviconUrl);
+            if (faviconRes.ok) {
+                const blob = await faviconRes.blob();
+                const file = new File([blob], 'letter-left-behind.png', { type: blob.type || 'image/png' });
+                const payloadWithFile = { title: shareTitle, text: shareText, files: [file] };
+                if (navigator.canShare && navigator.canShare(payloadWithFile)) {
+                    try {
+                        await navigator.share(payloadWithFile);
+                        return;
+                    } catch (shareErr) {
+                        if (shareErr && shareErr.name === 'AbortError') return;
+                    }
+                }
+            }
+        } catch (e) {
+            console.log('[Share] Image attachment not used:', e);
+        }
+        try {
+            await navigator.share({ title: shareTitle, text: shareText, url: shareUrl });
+        } catch (err) {
+            if (err && err.name !== 'AbortError') console.log('Error sharing:', err);
+        }
     } else {
-        // Fallback: copy to clipboard
-        navigator.clipboard.writeText(shareText).then(() => {
-            alert('Results copied to clipboard!');
+        const combined = shareText + '\n\n' + shareUrl;
+        navigator.clipboard.writeText(combined).then(() => {
+            alert('Results and link copied to clipboard!');
         }).catch(() => {
-            alert('Share feature not available. Your results:\n\n' + shareText);
+            alert('Share feature not available. Your results:\n\n' + combined);
         });
     }
 }
