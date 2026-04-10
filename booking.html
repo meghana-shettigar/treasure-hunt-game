@@ -401,7 +401,9 @@
                 const cfg = window.STRIPE_CONFIG;
                 if (!cfg || !cfg.paymentApiUrl) return;
                 const base = cfg.paymentApiUrl.replace(/\/create-payment-intent\/?$/, '');
-                fetch(base + '/health', { mode: 'cors', cache: 'no-store' }).catch(function () {});
+                // Use no-cors to avoid noisy console CORS errors on cold-start / edge failures.
+                // This is best-effort: it simply nudges Render to wake up.
+                fetch(base + '/health', { mode: 'no-cors', cache: 'no-store' }).catch(function () {});
             } catch (e) { /* ignore */ }
         }
 

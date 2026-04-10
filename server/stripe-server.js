@@ -26,6 +26,14 @@ const stripe = stripeSecret ? Stripe(stripeSecret) : null;
 const app = express();
 const port = process.env.PORT || 3001;
 
+process.on('unhandledRejection', function (err) {
+    console.error('Unhandled promise rejection:', err);
+});
+
+process.on('uncaughtException', function (err) {
+    console.error('Uncaught exception:', err);
+});
+
 // CORS: if CLIENT_ORIGIN is unset or still the .env.example placeholder, reflect the browser's
 // Origin (works for http://localhost:8000 → API on :3001). For production set e.g.
 // CLIENT_ORIGIN=https://letterleftbehind.com,https://www.letterleftbehind.com
@@ -51,6 +59,8 @@ if (isPlaceholder) {
     };
 }
 app.use(cors(corsOptions));
+// Make sure preflight requests always succeed.
+app.options('*', cors(corsOptions));
 app.use(express.json({ limit: '32kb' }));
 
 app.get('/health', function (_req, res) {
