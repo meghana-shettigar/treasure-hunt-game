@@ -1118,7 +1118,8 @@
                 }
 
                 const numPlayers = parseInt(formData.players, 10) || 1;
-                const pricePerPlayerPence = stripeCfg.pricePerPlayerPence || 1200;
+                //const pricePerPlayerPence = stripeCfg.pricePerPlayerPence || 1200;
+                const pricePerPlayerPence = stripeCfg.pricePerPlayerPence || 0;
                 const amountPence = numPlayers * pricePerPlayerPence;
 
                 const bookingPayload = Object.assign({}, formData, {
