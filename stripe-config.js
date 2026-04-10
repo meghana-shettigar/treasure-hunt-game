@@ -19,7 +19,7 @@ window.STRIPE_CONFIG = {
     /** Deployed PaymentIntent API (HTTPS). Same service as test; server env must use sk_live for production. */
     paymentApiUrl: 'https://letterleftbehind-stripe-api.onrender.com/create-payment-intent',
 
-    pricePerPlayerPence: 0,
+    pricePerPlayerPence: 1200,
     currency: 'gbp',
 };
 
