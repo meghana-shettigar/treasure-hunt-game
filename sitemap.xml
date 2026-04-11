@@ -1,23 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://www.letterleftbehind.com/</loc>
+    <loc>https://letterleftbehind.com/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+    <lastmod>2026-04-11</lastmod>
   </url>
   <url>
-    <loc>https://www.letterleftbehind.com/booking.html</loc>
+    <loc>https://letterleftbehind.com/booking.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
+    <lastmod>2026-04-11</lastmod>
   </url>
   <url>
-    <loc>https://www.letterleftbehind.com/game.html</loc>
+    <loc>https://letterleftbehind.com/game.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+    <lastmod>2026-04-11</lastmod>
   </url>
   <url>
-    <loc>https://www.letterleftbehind.com/privacy-policy.html</loc>
+    <loc>https://letterleftbehind.com/privacy-policy.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
+    <lastmod>2026-04-11</lastmod>
   </url>
 </urlset>

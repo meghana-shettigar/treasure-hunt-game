@@ -1,4 +1,4 @@
-# https://www.letterleftbehind.com/robots.txt
+# Canonical site: https://letterleftbehind.com/ (www redirects here — see CNAME + DOMAIN-SETUP.md)
 User-agent: *
 Allow: /
 
@@ -7,4 +7,4 @@ Disallow: /admin-dashboard.html
 Disallow: /feedback-stats.html
 Disallow: /admin/
 
-Sitemap: https://www.letterleftbehind.com/sitemap.xml
+Sitemap: https://letterleftbehind.com/sitemap.xml

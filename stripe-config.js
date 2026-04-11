@@ -7,7 +7,7 @@
  * 2) paymentApiUrl — HTTPS URL of server/stripe-server.js (e.g. Render). Must use the same Stripe mode
  *    as publishableKey (live key + server sk_live, or test key + server sk_test).
  *
- * Stripe Dashboard → Settings → Payment method domains: add https://letterleftbehind.com (and www if used).
+ * Stripe Dashboard → Settings → Payment method domains: add https://letterleftbehind.com (and www if you serve it).
  *
  * Local dev (see README-RUNNING.md):
  *   // paymentApiUrl: 'http://localhost:3001/create-payment-intent',

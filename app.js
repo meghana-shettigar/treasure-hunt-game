@@ -1656,7 +1656,7 @@ async function shareResults() {
     const stats = gameEngine.getFinalStats();
     const shareText = `I completed the Letter Left Behind treasure hunt!\n\nTime: ${stats.time}\nScore: ${stats.score} points\n\nCan you beat my time?`;
     const shareTitle = 'Letter Left Behind - Treasure Hunt';
-    const shareUrl = 'https://www.letterleftbehind.com/game.html';
+    const shareUrl = 'https://letterleftbehind.com/game.html';
 
     if (navigator.share) {
         try {

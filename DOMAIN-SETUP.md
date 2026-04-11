@@ -4,6 +4,56 @@
 
 The static site is served from GitHub Pages with custom domain **letterleftbehind.com** (see `CNAME`). After moving off localhost, complete the items below so payments, Firebase, and email work in the browser.
 
+## 0. Apex vs `www` (SEO + Search Console)
+
+- **`CNAME` in this repo** points the site at **`letterleftbehind.com`** (apex). GitHub Pages often **redirects `www` → apex**, so the **canonical URLs** in HTML, `sitemap.xml`, and `robots.txt` should use **`https://letterleftbehind.com/...`** (not `www`).
+- **Where the redirect is configured:** usually **GitHub Pages → Custom domain** (apex + optional `www` DNS), or your **DNS provider** (e.g. `www` CNAME → `letterleftbehind.com` or to `username.github.io`). You do **not** set HTTP redirects inside these static HTML files.
+- **Google Search Console:** add a **URL-prefix** property for **`https://letterleftbehind.com/`** and submit **`https://letterleftbehind.com/sitemap.xml`**. If you only verify `www`, you will see “Page with redirect” for `www` URLs that redirect to apex — that is expected until you use the apex property or stop redirecting.
+
+### 0a. First time in Google Search Console — do this in order
+
+**Words to know**
+
+- **Apex** = your site without `www`: `https://letterleftbehind.com` (this is your “real” address after the redirect).
+- **`www`** = `https://www.letterleftbehind.com` — in your setup it usually **redirects** to the apex. That is fine for visitors; Google just needs you to look at the **final** URL when testing.
+
+**Step 1 — Open Search Console**
+
+1. Go to [Google Search Console](https://search.google.com/search-console).
+2. Sign in with the Google account that should own the site.
+
+**Step 2 — Add the correct property (apex, not only `www`)**
+
+1. Click **Add property** (or **+**).
+2. Choose **URL prefix** (easiest for a static site).
+3. Enter exactly: **`https://letterleftbehind.com/`** (no `www`, include `https://`, trailing slash is OK).
+4. Complete **verification** (Google will show options, e.g. **HTML file** upload to your repo, or **DNS TXT** at your domain host). Finish until the property shows as **Verified**.
+
+*(Optional but useful: you can also add `https://www.letterleftbehind.com/` as a second property to see `www` reports — but your **sitemap and canonicals** use apex, so treat **`https://letterleftbehind.com` as the main one**.)*
+
+**Step 3 — Submit your sitemap (apex)**
+
+1. In the left menu, open **Sitemaps**.
+2. Under “Add a new sitemap”, enter: **`sitemap.xml`** (Search Console already knows your property URL, so you usually only type the filename).
+3. Submit. It should resolve to **`https://letterleftbehind.com/sitemap.xml`**.
+
+**Step 4 — URL Inspection (this is the “test live URL” tool)**
+
+Use it on **apex** URLs — the same ones users land on after redirect:
+
+1. Paste **`https://letterleftbehind.com/booking.html`** → **Test live URL** (or **Request indexing** if offered).
+2. Repeat for **`https://letterleftbehind.com/game.html`** and **`https://letterleftbehind.com/privacy-policy.html`**.
+
+**Why not test `www` URLs for “is my page indexed?”**
+
+- If you inspect **`https://www.letterleftbehind.com/booking.html`**, Google follows the redirect to **`https://letterleftbehind.com/booking.html`**. Search Console may report **“Page with redirect”** for the `www` URL — that is **normal**, not a bug. It means: “this `www` address isn’t the one we keep; the apex one is.”
+- To avoid confusion, **inspect the apex URL** — that matches your **canonical** link in HTML and your **sitemap**.
+
+**Step 5 — What you should expect**
+
+- Indexing is **not instant**; it can take days.
+- “**Discovered – currently not indexed**” often clears after Google recrawls and sees internal links (your homepage now links to Privacy + Game).
+
 ## 1. Stripe payment API (Node: `server/stripe-server.js`)
 
 The booking page calls **`STRIPE_CONFIG.paymentApiUrl`** in `stripe-config.js` (default: `https://api.letterleftbehind.com/create-payment-intent`).
