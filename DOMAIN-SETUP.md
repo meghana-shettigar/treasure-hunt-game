@@ -37,6 +37,18 @@ The static site is served from GitHub Pages with custom domain **letterleftbehin
 2. Under “Add a new sitemap”, enter: **`sitemap.xml`** (Search Console already knows your property URL, so you usually only type the filename).
 3. Submit. It should resolve to **`https://letterleftbehind.com/sitemap.xml`**.
 
+**Common mistake — “Couldn’t fetch” sitemap**
+
+- A **property** is **one website root**, not each page. Add **`https://letterleftbehind.com/`** (with trailing slash), **not** `https://letterleftbehind.com/booking.html` as a property.
+- In **Sitemaps**, you only type the **sitemap filename**: **`sitemap.xml`**.  
+  **Wrong:** `https://letterleftbehind.com/booking.html/sitemap.xml` — there is no file there (booking is a page, not a folder), so Google says **Couldn’t fetch**.
+- **Right:** inside the **`https://letterleftbehind.com/`** property, submit **`sitemap.xml`** → Google fetches **`https://letterleftbehind.com/sitemap.xml`** (one file that lists all your pages).
+
+**Do you need separate properties for `/booking.html`, `/game.html`, etc.?**
+
+- **No.** One property **`https://letterleftbehind.com/`** covers every path: `/`, `/booking.html`, `/game.html`, …  
+- Use **URL Inspection** (Step 4) for **individual pages** — that is different from “Add property”.
+
 **Step 4 — URL Inspection (this is the “test live URL” tool)**
 
 Use it on **apex** URLs — the same ones users land on after redirect:
