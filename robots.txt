@@ -2,6 +2,9 @@
 User-agent: *
 Allow: /
 
+# Play URL is not for public search — only opened with ?bookingId= from a booking
+Disallow: /game.html
+
 # Internal tools — do not index
 Disallow: /admin-dashboard.html
 Disallow: /feedback-stats.html

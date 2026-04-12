@@ -68,7 +68,11 @@ async function checkBookingAccess() {
     const bookingId = getURLParameter('bookingId');
     
     if (!bookingId) {
-        // No booking ID - allow normal game flow (for testing/development)
+        // Production: game only opens with ?bookingId= from a booking (localhost / file for local dev).
+        if (/^(localhost|127\.0\.0\.1)$/i.test(window.location.hostname) || window.location.protocol === 'file:') {
+            return;
+        }
+        window.location.replace(window.location.origin + '/');
         return;
     }
     
@@ -1656,7 +1660,7 @@ async function shareResults() {
     const stats = gameEngine.getFinalStats();
     const shareText = `I completed the Letter Left Behind treasure hunt!\n\nTime: ${stats.time}\nScore: ${stats.score} points\n\nCan you beat my time?`;
     const shareTitle = 'Letter Left Behind - Treasure Hunt';
-    const shareUrl = 'https://letterleftbehind.com/game.html';
+    const shareUrl = window.location.origin + '/';
 
     if (navigator.share) {
         try {

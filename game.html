@@ -6,7 +6,21 @@
     <meta name="theme-color" content="#1a1a2e">
     <meta name="description" content="Play the Letter Left Behind outdoor treasure hunt: solve clues across 10 London locations from Waterloo, time-travel mystery, personalised letter—gift your message to players.">
     <meta name="keywords" content="London treasure hunt game, Waterloo clues, outdoor mystery London, personalised letter game, time travel London game, London walking puzzle">
-    <meta name="robots" content="index, follow">
+    <!-- Game is only for booked players (bookingId in URL). Do not index the play URL. -->
+    <meta name="robots" content="noindex, nofollow">
+    <script>
+        (function () {
+            try {
+                if (/^(localhost|127\.0\.0\.1)$/i.test(location.hostname) || location.protocol === 'file:') return;
+                var q = new URLSearchParams(location.search);
+                if (!(q.get('bookingId') || '').trim()) {
+                    window.location.replace(location.origin + '/');
+                }
+            } catch (e) {
+                window.location.replace(location.origin + '/');
+            }
+        })();
+    </script>
     <link rel="canonical" href="https://letterleftbehind.com/game.html">
     <link rel="icon" href="https://letterleftbehind.com/images/favicon.png" type="image/png" sizes="48x48">
     <link rel="icon" href="https://letterleftbehind.com/images/favicon.png" type="image/png">
