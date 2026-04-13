@@ -54,7 +54,8 @@ The static site is served from GitHub Pages with custom domain **letterleftbehin
 Use it on **apex** URLs — the same ones users land on after redirect:
 
 1. Paste **`https://letterleftbehind.com/booking.html`** → **Test live URL** (or **Request indexing** if offered).
-2. Repeat for **`https://letterleftbehind.com/game.html`** and **`https://letterleftbehind.com/privacy-policy.html`**.
+2. Repeat for **`https://letterleftbehind.com/privacy-policy.html`**.
+3. **`game.html`** — do **not** request indexing. The page uses **`noindex`** and is **`Disallow`** in `robots.txt` so it should not appear in search. If it was indexed earlier, use **Removals** (below).
 
 **Why not test `www` URLs for “is my page indexed?”**
 
@@ -65,6 +66,29 @@ Use it on **apex** URLs — the same ones users land on after redirect:
 
 - Indexing is **not instant**; it can take days.
 - “**Discovered – currently not indexed**” often clears after Google recrawls and sees internal links (your homepage now links to Privacy + Game).
+
+### Hide `game.html` from Google (if URL Inspection says “URL is on Google”)
+
+Your live `game.html` already has **`<meta name="robots" content="noindex, nofollow">`** and **`robots.txt`** has **`Disallow: /game.html`**. Google will **drop** the URL after the next crawls, but an old listing can linger briefly.
+
+**Fast hide (about 6 months) — Removals tool**
+
+1. Search Console → property **`https://letterleftbehind.com/`** (apex).
+2. Left menu → **Removals** (under **Indexing**).
+3. **New request** → **Temporarily remove URL** (wording may vary slightly).
+4. Enter: **`https://letterleftbehind.com/game.html`** → submit.
+
+This **hides** the result while Google processes **noindex**. It does not delete your page for players who use the **booked link with `?bookingId=`**.
+
+**Permanent:** keep **noindex** + **Disallow** deployed; over time the URL stays out of the index.
+
+### `www` property shows “Page with redirect” — is that OK?
+
+**Yes.** If **`www`** URLs redirect to **`letterleftbehind.com`**, Search Console reports **“URL is not on Google”** / **“Page with redirect”** for the **`www`** copy — Google prefers the **apex** URL. You do **not** need to fix that.
+
+Use **`https://www.letterleftbehind.com`** in URL Inspection only when you want to check the **homepage** on `www`. For **`booking`**, **`privacy`**, etc., always inspect the **apex** URLs: `https://letterleftbehind.com/booking.html`, etc.
+
+**Typo:** use exactly **`https://www.letterleftbehind.com/...`** (one colon, one slash after `https:`). Not `https:/www./...`.
 
 ## 1. Stripe payment API (Node: `server/stripe-server.js`)
 

@@ -10,7 +10,7 @@
     --exo-surface-2: rgba(255, 255, 255, 0.09);
     --exo-border: rgba(255, 255, 255, 0.12);
     --exo-glow: rgba(233, 69, 96, 0.35);
-    --exo-violet: #8b7cf6;
+    --exo-violet: rgb(139, 124, 246);
 }
 
 /* -------- Shared page background (landing + booking) -------- */
@@ -1227,8 +1227,8 @@ body.booking-page .form-section {
         }
 
         .payment-option:hover {
-            border-color: var(--accent-color);
-            background: rgba(233, 69, 96, 0.05);
+            border-color: rgb(139, 124, 246);
+            background: rgb(225, 223, 247);
         }
 
         .payment-option input[type="radio"] {
@@ -1236,8 +1236,8 @@ body.booking-page .form-section {
         }
 
         .payment-option.selected {
-            border-color: var(--accent-color);
-            background: rgba(233, 69, 96, 0.1);
+            border-color: rgb(139, 124, 246);
+            background: rgb(225, 223, 247);
         }
 
         .payment-option label {
