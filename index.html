@@ -3,6 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+    (function () {
+        try {
+            var p = location.pathname;
+            if (p === '/index.html' || /\/index\.html$/i.test(p)) {
+                location.replace('https://letterleftbehind.com/' + location.search + location.hash);
+            }
+        } catch (e) {}
+    })();
+    </script>
     <title>Letter Left Behind | London Treasure Hunt &amp; Mystery Walk from Waterloo</title>
     <meta name="description" content="Letter Left Behind — outdoor London treasure hunt and mystery walk from Waterloo: clues, riddles, history, optional letter from 1800. Book a day out, gift, or proposal.">
     <meta name="keywords" content="London treasure hunt, outdoor treasure hunt London, Waterloo Station treasure hunt, time travel mystery London, summer outdoor activity London, last minute gift London, personalised surprise gift, personalised letter gift, London walking mystery, historic London game, iconic London locations, clues London, couples activity London, family treasure hunt, group outdoor game, personalised message game, day out London, walking tour London, surprise gift experience, mystery walk London, Letter Left Behind">

@@ -55,7 +55,7 @@ Use it on **apex** URLs — the same ones users land on after redirect:
 
 1. Paste **`https://letterleftbehind.com/booking.html`** → **Test live URL** (or **Request indexing** if offered).
 2. Repeat for **`https://letterleftbehind.com/privacy-policy.html`**.
-3. **`game.html`** — do **not** request indexing. The page uses **`noindex`** and is **`Disallow`** in `robots.txt` so it should not appear in search. If it was indexed earlier, use **Removals** (below).
+3. **`game.html`** — do **not** request indexing. The page uses **`noindex`** (and is **not** blocked in `robots.txt`, so Google can crawl and read that tag). If it still appears in results, use **Removals** (below).
 
 **Why not test `www` URLs for “is my page indexed?”**
 
@@ -66,10 +66,11 @@ Use it on **apex** URLs — the same ones users land on after redirect:
 
 - Indexing is **not instant**; it can take days.
 - “**Discovered – currently not indexed**” often clears after Google recrawls and sees internal links (your homepage now links to Privacy + Game).
+- **`/` vs `/index.html`:** both can return the same HTML. The homepage **canonical** is **`https://letterleftbehind.com/`**. The site sends visitors from **`/index.html`** to **`/`** (client redirect) so Google can consolidate on one URL. In GSC you may briefly see one of them as **“Alternate page with proper canonical tag”** — that means duplicate handling is working.
 
 ### Hide `game.html` from Google (if URL Inspection says “URL is on Google”)
 
-Your live `game.html` already has **`<meta name="robots" content="noindex, nofollow">`** and **`robots.txt`** has **`Disallow: /game.html`**. Google will **drop** the URL after the next crawls, but an old listing can linger briefly.
+Your live `game.html` has **`<meta name="robots" content="noindex, nofollow">`**. **`robots.txt` must not `Disallow` that URL** — if crawling is blocked, Google never fetches the page and cannot reliably apply **noindex** (the URL can still appear from links). After deploy, Google will **drop** the URL on recrawl; a **Removals** request speeds hiding in results.
 
 **Fast hide (about 6 months) — Removals tool**
 
@@ -80,11 +81,13 @@ Your live `game.html` already has **`<meta name="robots" content="noindex, nofol
 
 This **hides** the result while Google processes **noindex**. It does not delete your page for players who use the **booked link with `?bookingId=`**.
 
-**Permanent:** keep **noindex** + **Disallow** deployed; over time the URL stays out of the index.
+**Permanent:** keep **noindex** deployed and **do not** `Disallow` `/game.html` in `robots.txt`.
 
 ### `www` property shows “Page with redirect” — is that OK?
 
 **Yes.** If **`www`** URLs redirect to **`letterleftbehind.com`**, Search Console reports **“URL is not on Google”** / **“Page with redirect”** for the **`www`** copy — Google prefers the **apex** URL. You do **not** need to fix that.
+
+**“Redirect error”** on some `www` paths is often the same situation (Google labels a redirect it did not keep in the index). Quick check: open **`https://www.letterleftbehind.com/game.html`** in a browser — you should get **one** clean redirect to the **apex** URL on **HTTPS**. If the browser shows a loop or mixed `http`/`https`, fix **DNS** and **GitHub Pages → Custom domain** so `www` → apex is a single **301** to **`https://letterleftbehind.com/...`**.
 
 Use **`https://www.letterleftbehind.com`** in URL Inspection only when you want to check the **homepage** on `www`. For **`booking`**, **`privacy`**, etc., always inspect the **apex** URLs: `https://letterleftbehind.com/booking.html`, etc.
 

@@ -2,8 +2,8 @@
 User-agent: *
 Allow: /
 
-# Play URL is not for public search — only opened with ?bookingId= from a booking
-Disallow: /game.html
+# game.html uses <meta name="robots" content="noindex"> — it must stay crawlable so Google can see it.
+# (Disallow here would block the crawl and prevent noindex from working.)
 
 # Internal tools — do not index
 Disallow: /admin-dashboard.html
