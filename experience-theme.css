@@ -782,11 +782,112 @@ body.booking-page::before {
     margin-bottom: 1.5rem;
 }
 
-.testimonials-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 16px;
+.testimonials-carousel {
     margin-top: 1.25rem;
+}
+
+.testimonials-carousel__viewport {
+    overflow-x: auto;
+    overflow-y: hidden;
+    touch-action: pan-x;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 215, 0, 0.35) transparent;
+    outline: none;
+}
+
+.testimonials-carousel__viewport:focus-visible {
+    box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.45);
+    border-radius: 12px;
+}
+
+.testimonials-carousel__viewport::-webkit-scrollbar {
+    height: 6px;
+}
+
+.testimonials-carousel__viewport::-webkit-scrollbar-thumb {
+    background: rgba(255, 215, 0, 0.35);
+    border-radius: 999px;
+}
+
+.testimonials-carousel__track {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+    padding-bottom: 6px;
+}
+
+.testimonials-carousel__track .testimonial-card {
+    flex-shrink: 0;
+    scroll-snap-align: start;
+}
+
+.testimonials-carousel__controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 12px 16px;
+    margin-top: 1rem;
+}
+
+.testimonials-carousel__btn {
+    flex: 0 0 auto;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 215, 0, 0.45);
+    background: rgba(255, 255, 255, 0.06);
+    color: #ffd700;
+    font-size: 1.75rem;
+    line-height: 1;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: background 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
+}
+
+.testimonials-carousel__btn:hover:not(:disabled) {
+    background: rgba(255, 215, 0, 0.12);
+    border-color: rgba(255, 215, 0, 0.75);
+}
+
+.testimonials-carousel__btn:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+.testimonials-carousel__dots {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 12px;
+}
+
+.testimonials-carousel__dot {
+    width: 8px;
+    height: 8px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.28);
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.testimonials-carousel__dot:hover {
+    background: rgba(255, 215, 0, 0.55);
+}
+
+.testimonials-carousel__dot.is-active {
+    background: #ffd700;
+    transform: scale(1.15);
 }
 
 .testimonial-card {
@@ -794,6 +895,8 @@ body.booking-page::before {
     padding: 1.25rem;
     border-radius: 16px;
     border-left: 3px solid var(--accent-color);
+    box-sizing: border-box;
+    min-height: 8.5rem;
 }
 
 .testimonial-text {
