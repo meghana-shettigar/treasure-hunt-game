@@ -260,6 +260,19 @@ body.booking-page::before {
     text-shadow: 0 4px 32px rgba(0, 0, 0, 0.85), 0 0 1px rgba(0, 0, 0, 0.9);
 }
 
+.landing-video-hero__title-sub {
+    display: block;
+    margin-top: 0.35em;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: clamp(0.95rem, 2.8vw, 1.2rem);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: none;
+    line-height: 1.35;
+    color: rgba(255, 248, 220, 0.96);
+    text-shadow: 0 2px 18px rgba(0, 0, 0, 0.8);
+}
+
 .landing-video-hero__tagline {
     font-size: clamp(0.98rem, 2.4vw, 1.12rem);
     line-height: 1.5;
